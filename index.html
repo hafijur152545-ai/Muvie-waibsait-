@@ -298,6 +298,34 @@ footer .fb{font-size:20px;font-weight:900;color:var(--ac);margin-bottom:4px}
 @keyframes popin{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:none}}
 /* chips ক্লিক হবে */
 .feat span.fc{cursor:pointer;transition:.2s}.feat span.fc:active{transform:scale(.94)}.feat span.fc:hover{border-color:var(--ac);color:var(--tx)}
+/* ===== নতুন আপলোড: ৩টা মুভি + ৪র্থ স্বাগতম কার্ড ===== */
+#site #newRow.three{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+#site #newRow.three .card .p b{font-size:13px}
+@media(min-width:700px){#site #newRow.three{grid-template-columns:repeat(4,minmax(0,1fr))}}
+#wcard{position:relative;border-radius:16px;overflow:hidden;min-height:250px;background:linear-gradient(160deg,#07070b,#1b1030 60%,#07070b);box-shadow:0 8px 22px #0007,0 0 0 1px #d4af3766;isolation:isolate;animation:popin .5s .24s both}
+#wcard::before{content:"";position:absolute;inset:0;border-radius:16px;padding:1.5px;background:linear-gradient(120deg,#f3e2a0,#d4af37 30%,#7c3aed 65%,#f3e2a0);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;z-index:3;background-size:250% 100%;animation:goldmove 6s linear infinite}
+#wcard::after{content:"";position:absolute;top:0;bottom:0;width:60px;left:-90px;background:linear-gradient(100deg,transparent,#ffffff26,transparent);transform:skewX(-20deg);animation:sheen 4.5s ease-in-out infinite;pointer-events:none;z-index:2}
+#wcard .wc-l{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:12px;text-align:center;transition:opacity .8s;background:radial-gradient(ellipse at 50% 0%,#4b2a8a66,transparent 70%)}
+#wcard .wc-b{opacity:0}#wcard.msg .wc-a{opacity:0}#wcard.msg .wc-b{opacity:1}
+#wcard .wci{font-size:38px;line-height:1;filter:drop-shadow(0 0 12px #d4af37aa);animation:bob 2.6s ease-in-out infinite}
+#wcard b{display:inline-block;font-size:12px;font-weight:800;color:#1a1100;padding:4px 13px;border-radius:999px;background:linear-gradient(90deg,#f3e2a0,#d4af37,#f3e2a0);box-shadow:0 3px 14px #d4af3766}
+#wcard .wcs{font-size:30px;font-weight:900;line-height:1.2;color:#fff;text-shadow:0 0 18px #d4af37aa,0 2px 0 #0008}
+#wcard .wcm{font-size:19px;font-weight:900;line-height:1.35;background:linear-gradient(90deg,#fff,#f3e2a0 50%,#d4af37);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+#wcard small{color:#e6dcff;font-size:11.5px;font-weight:600}
+/* মাঝের ঘরে স্বাগতম আর দেখাবে না — Ad থাকলে শুধু Ad-এর সময় খুলবে (Ad সিস্টেম আগের মতোই) */
+.rotslot .wl{display:none!important}
+.rotslot:not(.showad){max-height:0;margin:0 14px;opacity:0;box-shadow:none;pointer-events:none}
+.rotslot.showad{max-height:1500px;margin:16px 14px;opacity:1}
+.rotslot{transition:max-height .6s ease,margin .6s ease,opacity .6s ease}
+/* ===== নতুন আপলোড: আবার একটাই সারি (আগের মতো, সাইড-স্ক্রল) — ৩টা মুভি + ৪র্থ স্বাগতম ===== */
+#site #newRow.three{display:flex;grid-template-columns:none;gap:12px;overflow-x:auto;scroll-snap-type:x mandatory;padding:12px 14px 6px;scrollbar-width:none}
+#site #newRow.three::-webkit-scrollbar{display:none}
+#site #newRow.three .card{flex:0 0 150px;scroll-snap-align:start}
+#site #newRow.three .thumb img{aspect-ratio:auto;height:200px}
+#site #newRow.three .card .p b{font-size:13px}
+#site #newRow.three #wcard{flex:0 0 150px;scroll-snap-align:start;min-height:0;align-self:stretch}
+@media(min-width:700px){#site #newRow.three{grid-template-columns:none}#site #newRow.three .card,#site #newRow.three #wcard{flex-basis:190px}#site #newRow.three .thumb img{height:250px}}
+@media(max-width:420px){#site #newRow.three .card,#site #newRow.three #wcard{flex-basis:138px}}
 /* ===== মাঝের প্রাইম স্বাগতম ঘর (Movie ও Natok-এর মাঝে) — ১০ সেকেন্ড স্বাগতম, ৫ সেকেন্ড Ad ===== */
 .rotslot{position:relative;margin:16px 14px;border-radius:18px;overflow:hidden;background:linear-gradient(135deg,#07070b,#1b1030 55%,#07070b);isolation:isolate;box-shadow:0 10px 30px #0009,0 0 0 1px #d4af3755}
 .rotslot::before{content:"";position:absolute;inset:0;border-radius:18px;padding:1.5px;background:linear-gradient(120deg,#f3e2a0,#d4af37 30%,#7c3aed 65%,#f3e2a0);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;z-index:3;background-size:250% 100%;animation:goldmove 6s linear infinite}
@@ -582,7 +610,7 @@ function render(){
  const match=m=>(m.title||'').toLowerCase().includes(q)||(m.cat||'').toLowerCase().includes(q);
  const nl=MOV().slice(0,3), showNew=nl.length>=1&&curCat=='All'&&!q;
  $('newWrap').style.display=showNew?'block':'none';
- if(showNew){ $('newRow').classList.add('three'); $('newRow').innerHTML=nl.map(cardHTML).join(''); updateWelcome(); } else $('newRow').innerHTML='';
+ if(showNew){ $('newRow').classList.add('three'); $('newRow').innerHTML=nl.map(cardHTML).join('')+wcHTML(); updateWelcome(); updateWc(); } else $('newRow').innerHTML='';
  $('feat').style.display=(curCat=='All'&&!q)?'flex':'none';
  let html='';
  if(q){ const r=S.movies.filter(match); html=secHTML('🔍 সার্চ ফলাফল',r.length,r.length?`<div class="grid">${r.map(cardHTML).join('')}</div>`:'<div class="empty">কিছু পাওয়া যায়নি</div>'); }
@@ -637,7 +665,15 @@ function greet(){ const h=new Date().getHours(); return h<5?'শুভ রাত
 function makeSlot(){ slotHost=document.createElement('div'); slotHost.className='rotslot'; slotHost.innerHTML='<div class="wl"></div><div class="adl"></div>'; }
 function greetIco(){ const h=new Date().getHours(); return h<5?'🌙':h<12?'🌅':h<15?'☀️':h<18?'🌤️':h<20?'🌇':'🌙'; }
 function updateWelcome(){ if(!slotHost) return; const nm=S.settings.siteName||'SUN9', c=(S.settings.welcome||'').trim(); slotHost.querySelector('.wl').innerHTML=`<div class="wi">${greetIco()}</div><b>${esc(greet())}!</b><div class="ws">${esc(c||'স্বাগতম')}</div><small>${esc(nm)}-এর পক্ষ থেকে ❤️</small>`; }
-setInterval(()=>{ try{ updateWelcome(); }catch(e){} },60000);
+setInterval(()=>{ try{ updateWelcome(); updateWc(); }catch(e){} },60000);
+/* ===== ৪ নম্বর স্টাইলিশ স্বাগতম কার্ড (নতুন আপলোডের ৪র্থ থাম্বেল) ===== */
+let wcMsgOn=false;
+function wcHTML(){ return '<div id="wcard"><div class="wc-l wc-a"></div><div class="wc-l wc-b"></div></div>'; }
+function updateWc(){ const el=$('wcard'); if(!el) return; const nm=S.settings.siteName||'SUN9', c=(S.settings.welcome||'').trim();
+ el.querySelector('.wc-a').innerHTML=`<div class="wci">${greetIco()}</div><b>${esc(greet())}!</b><div class="wcs">${esc(c||'স্বাগতম')}</div><small>${esc(nm)}-এর পক্ষ থেকে ❤️</small>`;
+ el.querySelector('.wc-b').innerHTML=`<div class="wci">🍿</div><div class="wcm">পছন্দের মুভি ও নাটক দেখে নিন</div><small>প্রতিদিন নতুন নাটক • ${esc(nm)}</small>`;
+ el.classList.toggle('msg',wcMsgOn); }
+(function wcLoop(){ setTimeout(()=>{ wcMsgOn=true; const e=$('wcard'); if(e) e.classList.add('msg'); setTimeout(()=>{ wcMsgOn=false; const e2=$('wcard'); if(e2) e2.classList.remove('msg'); wcLoop(); },5000); },10000); })();
 function placeSlot(){ const sl=$('midSlot'); if(sl&&slotHost) sl.replaceWith(slotHost); }
 function fitSlot(){ const adl=slotHost&&slotHost.querySelector('.adl'); if(!adl) return; const w=(slotHost.clientWidth||300)-20; adl.querySelectorAll('.adin').forEach(e=>{ e.style.zoom=''; const sw=e.scrollWidth; if(sw>w) e.style.zoom=(w/sw).toFixed(3); }); }
 function startSlot(){
