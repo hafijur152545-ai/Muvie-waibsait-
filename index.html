@@ -365,10 +365,10 @@ footer .fb{font-size:20px;font-weight:900;color:var(--ac);margin-bottom:4px}
 
  <div class="pane" id="p-stats">
   <h3>📊 ভিজিটর</h3>
-  <p class="hint">প্রতিদিন সকাল ৬:০০ টায় গণনা ০ থেকে শুরু হয়। (আপনার নিজের ভিজিট গোনা হয় না)</p>
+  <p class="hint">প্রতিদিন সকাল ৬:০০ টায় গণনা ০ থেকে শুরু হয় (২৪ ঘণ্টা)। একই ডিভাইস দিনে ১ ইউনিক, আর ১ ঘণ্টা পর ফিরলে নতুন ১ ভিজিট গোনা হয়। আপনার নিজের ফোন গোনা হয় না।</p>
   <div class="row2">
-   <div class="acard" style="text-align:center"><div class="hint" style="margin:0">আজকের ভিজিটর</div><div id="stV" style="font-size:38px;font-weight:800;color:#ff9a3c">–</div></div>
-   <div class="acard" style="text-align:center"><div class="hint" style="margin:0">আজকের পেজ ভিউ</div><div id="stP" style="font-size:38px;font-weight:800;color:#4ade80">–</div></div>
+   <div class="acard" style="text-align:center"><div class="hint" style="margin:0">আজকের ইউনিক ডিভাইস</div><div id="stV" style="font-size:38px;font-weight:800;color:#ff9a3c">–</div></div>
+   <div class="acard" style="text-align:center"><div class="hint" style="margin:0">আজকের মোট ভিজিট</div><div id="stP" style="font-size:38px;font-weight:800;color:#4ade80">–</div></div>
   </div>
   <div class="acard"><b>গত ৭ দিন</b><div id="stList" style="margin-top:8px"></div></div>
   <button class="abtn g" onclick="loadStats()">🔄 Refresh</button>
@@ -471,7 +471,7 @@ function render(){
  const nm=(S.settings.siteName||'SUN9');
  $('logoText').innerHTML=esc(nm.replace(/9$/,''))+(/9$/.test(nm)?'<span>9</span>':'');
  $('secTitle').textContent=S.settings.secTitle||'🔥 Trending Now';
- $('foot').innerHTML='<div class="fb">'+esc(nm)+'</div><div>সেরা নাটক ও মুভি এক জায়গায় 🎬</div><div style="margin-top:8px;opacity:.7">© '+esc(nm)+' Movie Website</div>';
+ $('foot').innerHTML='<div class="fb">'+esc(nm)+'</div><div>সেরা নাটক ও মুভি এক জায়গায় 🎬</div><div style="margin-top:8px;opacity:.7">© '+esc(nm)+' Movie Website · v3</div>';
  document.title=nm+' - Movie Website';
 }
 function cardHTML(m,i=0){ return `<div class="card" style="animation-delay:${Math.min(i,10)*55}ms" onclick="openMovie(${m.id})"><div class="thumb"><span class="dur">⏱ ${esc(m.dur)}</span><img data-th="${m.id}" loading="lazy" src="${esc(imgOf(m))}" alt="" onerror="this.onerror=null;this.src=PLACE"></div><div class="p"><b>${esc(m.title)}</b><div class="small">${m.kind==='short'?'📱 Short':esc(m.cat)} • ${esc(m.dur)}</div><div class="watch">▶️ দেখুন</div></div></div>`; }
@@ -499,10 +499,16 @@ function runAds(){
  if(adsDone) return; adsDone=true;
  if(S.ads.on===false) return;
  arr(S.ads.items).filter(a=>a.type!=='direct'&&a.on!==false&&a.code&&a.code.trim()).forEach(a=>{
+  if(a.type==='popunder'){ popItems.push(a); return; } // Popunder থাম্বনেল-ক্লিকে চলবে না, আনলকের পর চলবে
   const d=document.createElement('div'); d.className='adone';
   (a.pos==='global'?document.body:(a.pos==='bottom'?$('banner2'):$('banner1'))).appendChild(d);
   injectHTML(d,a.code);
  });
+}
+let popItems=[], popDone=false;
+function runPop(){
+ if(popDone||!popItems.length||S.ads.on===false) return; popDone=true;
+ popItems.forEach(a=>{ const d=document.createElement('div'); d.className='adone'; document.body.appendChild(d); injectHTML(d,a.code); });
 }
 
 /* --- আনলক টাস্ক --- */
@@ -538,6 +544,7 @@ function renderWatch(){
  <div class="winfo"><h1>${esc(m.title)}</h1><div class="small">${vert?'📱 Short':esc(m.cat)} • ⏱ ${esc(m.dur)}</div>${m.desc?`<p class="small" style="margin-top:8px">${esc(m.desc)}</p>`:''}<div style="margin-top:10px"><button class="btn ghost" onclick="copyLink(${m.id})">📤 Share</button></div></div>
  <div id="unlockBox"></div>
  ${more.length?`<h2 class="sec" style="padding:22px 0 0">আরও দেখুন</h2><div class="grid" style="padding:14px 0">${more.map(cardHTML).join('')}</div>`:''}</div>`;
+ if(open) setTimeout(()=>{ if(cur&&cur.id==m.id) runPop(); },800);
  if(!open) buildLock(T); else if(T.length&&m.click) $('unlockBox').innerHTML=`<div class="ucard"><b>✅ আনলক হয়েছে</b><div class="clicktxt">${esc(m.click)}</div></div>`;
 }
 function buildLock(T){
@@ -725,15 +732,17 @@ const dayKey=(ms=Date.now())=>new Date(ms).toISOString().slice(0,10); // UTC দ
 function inc(path){ fetch(DB()+path+'.json',{method:'PUT',body:JSON.stringify({'.sv':{increment:1}})}).catch(()=>{}); }
 function countVisit(){
  if(!CLOUD||devOK()) return;
- const d=dayKey(); inc('/stats/'+d+'/views');
- if(jget('sun9_seen',null)!==d){ jset('sun9_seen',d); inc('/stats/'+d+'/visitors'); }
+ const d=dayKey(), now=Date.now();
+ let last=0; try{ last=+localStorage.getItem('sun9_lastvisit')||0; }catch(e){}
+ if(now-last>=3600e3){ try{localStorage.setItem('sun9_lastvisit',String(now))}catch(e){} inc('/stats/'+d+'/views'); } // একই ডিভাইস ১ ঘণ্টায় ১ ভিজিট
+ if(jget('sun9_seen',null)!==d){ jset('sun9_seen',d); inc('/stats/'+d+'/visitors'); } // একই ডিভাইস দিনে ১ ইউনিক
 }
 async function loadStats(){
  if(!CLOUD){ $('stList').textContent='Firebase সেট করা নেই'; return; }
  try{
   const tok=await fbToken(); const r=await fetch(DB()+'/stats.json?auth='+tok); if(!r.ok) throw 0; const j=(await r.json())||{};
   const t=j[dayKey()]||{}; $('stV').textContent=t.visitors||0; $('stP').textContent=t.views||0;
-  let h=''; for(let i=0;i<7;i++){ const k=dayKey(Date.now()-i*864e5), v=j[k]||{}; h+=`<div class="sw-row" style="border-bottom:1px solid #20242f"><span>${i==0?'আজ':k}</span><span>👤 ${v.visitors||0} &nbsp; 👁 ${v.views||0}</span></div>`; }
+  let h=''; for(let i=0;i<7;i++){ const k=dayKey(Date.now()-i*864e5), v=j[k]||{}; h+=`<div class="sw-row" style="border-bottom:1px solid #20242f"><span>${i==0?'আজ':k}</span><span>📱 ${v.visitors||0} ডিভাইস &nbsp; 👁 ${v.views||0} ভিজিট</span></div>`; }
   $('stList').innerHTML=h;
  }catch(e){ $('stList').textContent='লোড হয়নি — Rules চেক করুন বা আবার Login করুন'; }
 }
