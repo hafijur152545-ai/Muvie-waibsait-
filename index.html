@@ -269,6 +269,20 @@ footer .fb{font-size:20px;font-weight:900;color:var(--ac);margin-bottom:4px}
 .t14 .sec{letter-spacing:3px;text-transform:uppercase;color:var(--ac2);font-weight:600}
 .t14 .card .p b{color:var(--ac2)}
 
+#stickyAd{display:none;position:fixed;left:0;right:0;bottom:0;z-index:35;text-align:center;background:#000c;padding:4px 0;max-height:40vh;overflow:hidden}
+#midHost{margin:14px 0;text-align:center;overflow:hidden}
+
+.feat .lucky{cursor:pointer;color:var(--onac);background:linear-gradient(90deg,var(--ac),var(--ac2));border-color:transparent}
+.rotslot{flex:0 0 150px;position:relative;border-radius:var(--rad);overflow:hidden;min-height:270px;border:1px solid var(--bd);background:var(--card)}
+@media(min-width:700px){.rotslot{flex-basis:190px;min-height:330px}}
+.rotslot .wl,.rotslot .adl{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:10px;transition:opacity .7s}
+.rotslot .wl{background:linear-gradient(160deg,var(--ac),var(--ac2));color:var(--onac);gap:6px;z-index:1}
+.rotslot .wl .wi{font-size:38px;animation:bob 2.2s ease-in-out infinite}.rotslot .wl b{font-size:18px}.rotslot .wl .ws{font-size:22px;font-weight:900;line-height:1.2}.rotslot .wl small{opacity:.9;font-size:12px}
+.rotslot .adl{opacity:0;pointer-events:none;background:var(--card);z-index:2}
+.rotslot.showad .adl{opacity:1;pointer-events:auto}.rotslot.showad .wl{opacity:0}
+@media(max-width:420px){.rowcards .card,.rotslot{flex-basis:138px}}
+@keyframes bob{50%{transform:translateY(-6px) scale(1.08)}}
+
 /* ========== ADMIN ========== */
 #admin{display:none;min-height:100vh;background:#0b0d12;color:#e8eaf0;font-family:system-ui,-apple-system,"Noto Sans Bengali",Arial,sans-serif;padding-bottom:60px}
 #admin.open{display:block}
@@ -333,11 +347,12 @@ footer .fb{font-size:20px;font-weight:900;color:var(--ac);margin-bottom:4px}
  <div id="home">
   <div class="hero" id="hero"></div>
   <div class="cats" id="cats"></div>
-  <div class="feat" id="feat"><span>🎬 প্রতিদিন নতুন নাটক</span><span>📱 Shorts</span><span>🔓 সহজ আনলক</span><span>📲 মোবাইল ফ্রেন্ডলি</span></div>
+  <div class="feat" id="feat"><span class="lucky" onclick="luckyPick()">🎲 কী দেখব? একটা বেছে দিন</span><span>🎬 প্রতিদিন নতুন নাটক</span><span>📱 Shorts</span><span>🔓 সহজ আনলক</span><span>📲 মোবাইল ফ্রেন্ডলি</span></div>
   <div id="newWrap" style="display:none"><h2 class="sec">🆕 নতুন আপলোড</h2><div class="rowcards" id="newRow"></div></div>
   <div id="secs"></div>
  </div>
  <div id="watch" style="display:none"></div>
+ <div id="stickyAd"></div>
  <div class="adbox" id="banner2"></div>
  <footer id="foot"></footer>
 </div>
@@ -413,6 +428,8 @@ footer .fb{font-size:20px;font-weight:900;color:var(--ac);margin-bottom:4px}
   <h3>💰 Adsterra Ads</h3>
   <p class="hint">Adsterra-র প্রতিটা ধরনের জন্য আলাদা ঘর। কোড (বা Direct Link) বসান, চালু/বন্ধ করুন, আর কোথায় দেখাবে বেছে নিন। দর্শক সাইটে ঢুকলেই চলবে (মুভিতে ক্লিক করলে নয়)।</p>
   <div class="acard"><div class="sw-row"><span><b>সব Ads একসাথে চালু / বন্ধ</b></span><label class="tg"><input type="checkbox" id="adOn"><i></i></label></div></div>
+  <div class="acard"><b>🆕 স্বাগতম ↔ Ad ঘূর্ণন (নতুন আপলোড সারির ভেতরে)</b><p class="hint">"নতুন আপলোড সারির ভেতরে" জায়গা দেওয়া Ad এখানে আসবে। প্রথমে স্বাগতম দেখায়, এই সেকেন্ড পর Ad আসে, কিছুক্ষণ থেকে আবার স্বাগতম।</p><div class="row2"><div><label>স্বাগতম দেখাবে (সেকেন্ড)</label><input id="adW" type="number" min="1" max="120"></div><div><label>Ad দেখাবে (সেকেন্ড)</label><input id="adA" type="number" min="1" max="120"></div></div></div>
+  <div class="acard"><b>📌 Sticky Banner সময়</b><p class="hint">যে Banner-এর জায়গা "Sticky" দেবেন সেটা স্ক্রিনের নিচে ভাসবে, এই সেকেন্ড দেখিয়ে লুকাবে, আবার রিফ্রেশ হয়ে ফিরবে।</p><div class="row2"><div><label>কত সেকেন্ড দেখাবে</label><input id="adShow" type="number" min="1" max="120"></div><div><label>কত সেকেন্ড লুকিয়ে থাকবে</label><input id="adHide" type="number" min="1" max="120"></div></div></div>
   <div id="adRows"></div>
   <button class="abtn g sm" onclick="addAdRow()">+ নতুন Ad ঘর</button> <button class="abtn sm" onclick="addAdRow('direct')">+ Direct Link (টাস্কের জন্য)</button>
   <div style="margin-top:14px"><button class="abtn" onclick="saveAds()">💾 Ads Save করুন</button></div>
@@ -434,6 +451,8 @@ footer .fb{font-size:20px;font-weight:900;color:var(--ac);margin-bottom:4px}
   <div class="acard">
    <label>ওয়েবসাইটের নাম / লোগো</label><input id="siteName">
    <label>ক্যাটাগরি লিস্ট (কমা দিয়ে লিখুন, যেমন: Movie,Natok)</label><input id="secName">
+   <div class="row2"><div><label>নতুন আপলোড সারিতে কয়টা দেখাবে</label><input id="newCount" type="number" min="1" max="20"></div><div><label>কয়টা মুভির পর স্বাগতম/Ad ঘর বসবে</label><input id="slotAfter" type="number" min="0" max="20"></div></div>
+   <label>স্বাগতম বার্তা (ফাঁকা রাখলে "স্বাগতম")</label><input id="welcomeTxt" placeholder="যেমন: স্বাগতম! নতুন নাটক দেখুন">
    <label>ইউনিক ভিজিট গণনা: একই ডিভাইস কত ঘণ্টা পর আবার নতুন ভিজিট হবে</label><input id="visitHrs" type="number" min="1" max="24">
    <div class="row2"><div><label>ওপরের স্লাইডারে কয়টা নতুন মুভি</label><input id="heroCount" type="number" min="1" max="10"></div><div><label>কত সেকেন্ড পর পর বদলাবে</label><input id="heroSec" type="number" min="1" max="30"></div></div>
    <div class="sw-row"><span><b>Viral Natok Mode</b></span><label class="tg"><input type="checkbox" id="viralMode"><i></i></label></div>
@@ -470,8 +489,8 @@ const THEMES=[
 ];
 const CATS=['All','Action','Natok','Horror','Sci-Fi','Comedy','Thriller','Viral'];
 const DEF={
- settings:{siteName:'SUN9',theme:1,viralMode:true,cats:'Movie,Natok',visitHours:5,heroSec:3,heroCount:5},
- ads:{on:true,items:[{type:'popunder',label:'Popunder',pos:'global',code:'',on:true},{type:'social',label:'Social Bar',pos:'global',code:'',on:true},{type:'banner',label:'Banner (ওপরে)',pos:'top',code:'',on:true},{type:'banner',label:'Banner (নিচে)',pos:'bottom',code:'',on:true},{type:'native',label:'Native Banner',pos:'bottom',code:'',on:true},{type:'direct',label:'Direct Link 1',pos:'top',code:'',on:true},{type:'direct',label:'Direct Link 2',pos:'top',code:'',on:true},{type:'direct',label:'Direct Link 3',pos:'top',code:'',on:true}]},
+ settings:{siteName:'SUN9',theme:1,viralMode:true,cats:'Movie,Natok',visitHours:5,newCount:5,slotAfter:2,welcome:'',heroSec:3,heroCount:5},
+ ads:{on:true,show:5,hide:5,wsec:10,asec:5,items:[{type:'popunder',label:'Popunder',pos:'global',code:'',on:true},{type:'social',label:'Social Bar',pos:'global',code:'',on:true},{type:'banner',label:'Banner (ওপরে)',pos:'top',code:'',on:true},{type:'banner',label:'Banner (নিচে)',pos:'bottom',code:'',on:true},{type:'native',label:'Native Banner',pos:'bottom',code:'',on:true},{type:'direct',label:'Direct Link 1',pos:'top',code:'',on:true},{type:'direct',label:'Direct Link 2',pos:'top',code:'',on:true},{type:'direct',label:'Direct Link 3',pos:'top',code:'',on:true}]},
  unlock:{count:3,gap:10,hours:24,tasks:[{url:''},{url:''},{url:''}]},
  movies:[]};
 
@@ -490,9 +509,10 @@ let inApp=false, sess=new Set(), IMG={}, THUMB={}, mvThumb=null, sIdx=0, sTimer,
 function norm(d){
  const o=clone(DEF); d=d||{};
  o.settings={...o.settings,...(d.settings||{})};
- const ad=d.ads||{}; o.ads.on=ad.on!==false;
+ const ad=d.ads||{}; o.ads.on=ad.on!==false; o.ads.show=+ad.show||5; o.ads.hide=+ad.hide||5; o.ads.wsec=+ad.wsec||10; o.ads.asec=+ad.asec||5; o.ads.migNative=!!ad.migNative;
  if(ad.items!==undefined) o.ads.items=arr(ad.items);
  else if(ad.pop||ad.b1||ad.b2) o.ads.items=[{type:'popunder',label:'Popunder / Social Bar',pos:'global',code:ad.pop||'',on:true},{type:'banner',label:'Banner (ওপরে)',pos:'top',code:ad.b1||'',on:true},{type:'banner',label:'Banner (নিচে)',pos:'bottom',code:ad.b2||'',on:true}];
+ if(!o.ads.migNative){ o.ads.items.forEach(a=>{ if(a.type==='native'&&a.pos==='bottom') a.pos='newrow'; }); o.ads.migNative=true; } // Native আগের জায়গা থেকে নতুন-আপলোড সারিতে (একবারই)
  const u=d.unlock||{}; o.unlock={...o.unlock,...u};
  // পুরনো টাস্ক-লিংক থাকলে সেগুলো Ads-এর Direct Link হয়ে যাবে
  const lt=arr(u.tasks).filter(t=>t.url&&t.url.trim());
@@ -527,18 +547,19 @@ function render(){
   $('hero').innerHTML=hs.map((h,i)=>`<div class="slide ${i==0?'on':''}"><img data-th="${h.id}" src="${esc(imgOf(h))}" alt=""><div class="ov"><span class="badge">${i==0?'🆕 লেটেস্ট':(S.settings.viralMode!==false?'🔥 Viral':'⭐ Featured')}</span><h1>${esc(h.title)}</h1><div class="meta"><span>${esc(catOf(h))}</span><span>⏱ ${esc(h.dur)}</span></div>${h.desc?`<p class="hd">${esc(h.desc)}</p>`:''}<button class="btn" onclick="openMovie(${h.id})">▶️ এখনই দেখুন</button></div></div>`).join('')+(hs.length>1?`<div class="dots">${hs.map((_,i)=>`<i class="${i==0?'on':''}" onclick="goSlide(${i})"></i>`).join('')}</div><i class="hp"></i>`:'');
   startSlider(); }
  const match=m=>(m.title||'').toLowerCase().includes(q)||(m.cat||'').toLowerCase().includes(q);
- const nl=MOV().slice(0,8), showNew=nl.length>2&&curCat=='All'&&!q;
- $('newWrap').style.display=showNew?'block':'none'; $('newRow').innerHTML=showNew?nl.map(cardHTML).join(''):'';
+ const nl=MOV().slice(0,Math.max(1,+S.settings.newCount||5)), showNew=nl.length>=1&&curCat=='All'&&!q;
+ $('newWrap').style.display=showNew?'block':'none';
+ if(showNew){ const k=Math.min(Math.max(0,+S.settings.slotAfter??2),nl.length); $('newRow').innerHTML=nl.slice(0,k).map(cardHTML).join('')+'<div id="newSlot"></div>'+nl.slice(k).map(cardHTML).join(''); updateWelcome(); placeSlot(); } else $('newRow').innerHTML='';
  $('feat').style.display=(curCat=='All'&&!q)?'flex':'none';
  let html='';
  if(q){ const r=S.movies.filter(match); html=secHTML('🔍 সার্চ ফলাফল',r.length,r.length?`<div class="grid">${r.map(cardHTML).join('')}</div>`:'<div class="empty">কিছু পাওয়া যায়নি</div>'); }
  else if(curCat==='Shorts'){ html=secHTML('📱 Shorts',shorts.length,`<div class="shorts wrapg">${shorts.map(shortHTML).join('')}</div>`); }
  else{
-  (curCat==='All'?L:[curCat]).forEach(c=>{ const a=MOV().filter(m=>catOf(m)===c); if(a.length) html+=secHTML((CAT_ICON[c]||'📺')+' '+esc(c),a.length,`<div class="grid">${a.map(cardHTML).join('')}</div>`); });
+  let ns=0; (curCat==='All'?L:[curCat]).forEach(c=>{ const a=MOV().filter(m=>catOf(m)===c); if(a.length){ html+=secHTML((CAT_ICON[c]||'📺')+' '+esc(c),a.length,`<div class="grid">${a.map(cardHTML).join('')}</div>`); if(++ns===1&&curCat==='All') html+='<div id="midSlot"></div>'; } });
   if(curCat==='All'&&shorts.length) html+=secHTML('📱 Shorts',shorts.length,`<div class="shorts">${shorts.map(shortHTML).join('')}</div>`);
   if(!html) html='<div class="empty">🎬 শীঘ্রই নতুন নাটক ও মুভি আসছে...</div>';
  }
- $('secs').innerHTML=html;
+ $('secs').innerHTML=html; placeMid();
  const nm=(S.settings.siteName||'SUN9');
  $('logoText').innerHTML=esc(nm.replace(/9$/,''))+(/9$/.test(nm)?'<span>9</span>':'');
  $('foot').innerHTML='<div class="fb">'+esc(nm)+'</div><div>সেরা নাটক ও মুভি এক জায়গায় 🎬</div><div style="margin-top:8px;opacity:.7">© '+esc(nm)+' Movie Website · v3</div>';
@@ -578,15 +599,42 @@ function injectHTML(el,html){
  t.querySelectorAll('script').forEach(old=>{const s=document.createElement('script');[...old.attributes].forEach(a=>s.setAttribute(a.name,a.value));s.text=old.text;old.replaceWith(s);});
  while(t.firstChild) el.appendChild(t.firstChild);
 }
+let slotHost=null, slotAds=[], slotT;
+function greet(){ const h=new Date().getHours(); return h<5?'শুভ রাত্রি':h<12?'শুভ সকাল':h<15?'শুভ দুপুর':h<18?'শুভ বিকাল':h<20?'শুভ সন্ধ্যা':'শুভ রাত্রি'; }
+function makeSlot(){ slotHost=document.createElement('div'); slotHost.className='rotslot'; slotHost.innerHTML='<div class="wl"></div><div class="adl"></div>'; }
+function updateWelcome(){ if(!slotHost) return; const nm=S.settings.siteName||'SUN9', c=(S.settings.welcome||'').trim(); slotHost.querySelector('.wl').innerHTML=`<div class="wi">🎬</div><b>${esc(greet())}!</b><div class="ws">${esc(c||'স্বাগতম')}</div><small>${esc(nm)}-এর পক্ষ থেকে ❤️</small>`; }
+function placeSlot(){ const sl=$('newSlot'); if(sl&&slotHost) sl.replaceWith(slotHost); }
+function fitSlot(){ const adl=slotHost&&slotHost.querySelector('.adl'); if(!adl) return; const w=(slotHost.clientWidth||150)-6; adl.querySelectorAll('.adin').forEach(e=>{ e.style.zoom=''; const sw=e.scrollWidth; if(sw>w) e.style.zoom=(w/sw).toFixed(3); }); }
+function startSlot(){
+ clearTimeout(slotT); slotHost.classList.remove('showad'); if(!slotAds.length) return;
+ const w=Math.max(1,+S.ads.wsec||10)*1000, a=Math.max(1,+S.ads.asec||5)*1000;
+ const loop=()=>{ slotHost.classList.remove('showad'); slotT=setTimeout(()=>{ slotHost.classList.add('showad'); fitSlot(); slotT=setTimeout(loop,a); },w); };
+ loop(); [700,2000,4500].forEach(t=>setTimeout(fitSlot,t));
+}
+function luckyPick(){ const a=MOV(); if(a.length) openMovie(a[Math.floor(Math.random()*a.length)].id); }
+function adWrap(a){ const d=document.createElement('div'); d.className='adone'; const z=+a.size; if(z&&z<100) d.style.zoom=z/100; return d; }
+let midHost=null, stickyItems=[], stickyT;
 function runAds(){
  if(adsDone) return; adsDone=true;
  if(S.ads.on===false) return;
  arr(S.ads.items).filter(a=>a.type!=='direct'&&a.on!==false&&a.code&&a.code.trim()).forEach(a=>{
   if(a.type==='popunder'){ popItems.push(a); return; } // Popunder থাম্বনেল-ক্লিকে চলবে না, আনলকের পর চলবে
-  const d=document.createElement('div'); d.className='adone';
+  if(a.pos==='sticky'){ stickyItems.push(a); return; }
+  if(a.pos==='newrow'){ slotAds.push(a); const d=document.createElement('div'); d.className='adin'; slotHost.querySelector('.adl').appendChild(d); injectHTML(d,a.code); return; }
+  if(a.pos==='middle'){ if(!midHost){ midHost=document.createElement('div'); midHost.id='midHost'; } const d=adWrap(a); midHost.appendChild(d); injectHTML(d,a.code); placeMid(); return; }
+  const d=adWrap(a);
   (a.pos==='global'?document.body:(a.pos==='bottom'?$('banner2'):$('banner1'))).appendChild(d);
   injectHTML(d,a.code);
  });
+ startSticky(); startSlot();
+}
+function placeMid(){ const sl=$('midSlot'); if(sl&&midHost) sl.replaceWith(midHost); }
+function startSticky(){
+ if(!stickyItems.length) return; const box=$('stickyAd');
+ const show=Math.max(1,+S.ads.show||5)*1000, hide=Math.max(1,+S.ads.hide||5)*1000;
+ const on=()=>{ box.innerHTML=''; stickyItems.forEach(a=>{ const d=adWrap(a); box.appendChild(d); injectHTML(d,a.code); }); box.style.display='block'; stickyT=setTimeout(off,show); };
+ const off=()=>{ box.style.display='none'; box.innerHTML=''; stickyT=setTimeout(on,hide); };
+ on();
 }
 let popItems=[], popDone=false;
 function runPop(){
@@ -703,9 +751,9 @@ function renderAdmin(){
  $('movieList').innerHTML=S.movies.map(m=>`<div class="acard mv"><img src="${esc(imgOf(m))}" alt=""><div class="t"><b>${esc(m.title)}</b><small>${m.kind==='short'?'📱 Short':esc(catOf(m))} • ⏱ ${esc(m.dur)}</small></div><button class="abtn g sm" onclick="copyLink(${m.id})" title="লিংক কপি">🔗</button><button class="abtn sm" onclick="editMovie(${m.id})">Edit</button><button class="abtn red sm" onclick="delMovie(${m.id})">✕</button></div>`).join('')||'<p class="hint">কোনো মুভি নেই</p>';
  renderThemes(); $('fCat').innerHTML=catList().map(c=>`<option>${esc(c)}</option>`).join(''); $('ptLbl').textContent='থিম নম্বর (1 থেকে '+THEMES.length+')'; $('ptNum').max=THEMES.length;
  const u=S.unlock; $('uCount').value=u.count; $('uGap').value=u.gap; $('uHours').value=u.hours; renderTaskInfo();
- $('adOn').checked=S.ads.on!==false; tmpAds=arr(S.ads.items).map(a=>({...a})); renderAdRows();
+ $('adW').value=S.ads.wsec||10; $('adA').value=S.ads.asec||5; $('adShow').value=S.ads.show||5; $('adHide').value=S.ads.hide||5; $('adOn').checked=S.ads.on!==false; tmpAds=arr(S.ads.items).map(a=>({...a})); renderAdRows();
  $('heroCount').value=S.settings.heroCount||5; $('heroSec').value=S.settings.heroSec||3;
- $('siteName').value=S.settings.siteName||''; $('secName').value=S.settings.cats||'Movie,Natok'; $('visitHrs').value=S.settings.visitHours||5; $('viralMode').checked=S.settings.viralMode!==false;
+ $('siteName').value=S.settings.siteName||''; $('secName').value=S.settings.cats||'Movie,Natok'; $('visitHrs').value=S.settings.visitHours||5; $('newCount').value=S.settings.newCount||5; $('slotAfter').value=S.settings.slotAfter??2; $('welcomeTxt').value=S.settings.welcome||''; $('viralMode').checked=S.settings.viralMode!==false;
 }
 function renderThemes(){
  $('themeList').innerHTML=THEMES.map(t=>`<div class="th ${S.settings.theme==t.n?'on':''}" onclick="setTheme(${t.n})"><span class="no">${t.n}</span><div class="sw" id="sw${t.n}" style="background:${t.c[0]}">${t.c.map(c=>`<i style="background:${c}"></i>`).join('')}</div><b>${t.name}</b><small>${t.d}</small><div class="up"><label class="abtn g sm" onclick="event.stopPropagation()">🖼 ছবি দিন<input type="file" accept="image/*" hidden onchange="upTheme(${t.n},this)"></label>${IMG[t.n]?`<button class="abtn red sm" onclick="event.stopPropagation();delImg(${t.n})">✕ ছবি</button>`:''}</div></div>`).join('');
@@ -768,20 +816,21 @@ function saveUnlock(){
  renderTaskInfo(); persist('✅ আনলক সেটিং সেভ হয়েছে');
 }
 const AD_TYPES=[['popunder','Popunder'],['social','Social Bar'],['banner','Banner'],['native','Native Banner'],['direct','Direct Link'],['other','অন্য কোড']];
-const POS=[['top','⬆️ ওপরে'],['bottom','⬇️ নিচে'],['global','🌐 পুরো সাইটে (পেছনে চলে)']];
+const POS=[['top','⬆️ ওপরে'],['middle','🔀 Movie ও Natok-এর মাঝে'],['newrow','🆕 নতুন আপলোড সারির ভেতরে (স্বাগতম-এর সাথে ঘুরে ঘুরে)'],['bottom','⬇️ নিচে'],['sticky','📌 Sticky (স্ক্রিনে ভাসমান, রিফ্রেশ হয়)'],['global','🌐 পুরো সাইটে (পেছনে চলে)']];
+const SIZES=[['100','আকার: স্বাভাবিক'],['80','আকার: ছোট (80%)'],['60','আকার: আরও ছোট (60%)']];
 function renderAdRows(){
  $('adRows').innerHTML=tmpAds.map((a,i)=>`<div class="acard"><div class="sw-row"><b>${i+1}. ${esc(a.label||'Ad')}</b><label class="tg"><input type="checkbox" ${a.on!==false?'checked':''} onchange="tmpAds[${i}].on=this.checked"><i></i></label></div>
  <select onchange="adType(${i},this.value)">${AD_TYPES.map(t=>`<option value="${t[0]}" ${a.type==t[0]?'selected':''}>${t[1]}</option>`).join('')}</select>
  <input placeholder="নাম (শুধু আপনার জন্য)" value="${esc(a.label||'')}" oninput="tmpAds[${i}].label=this.value">
  <textarea rows="3" placeholder="${a.type=='direct'?'https:// Direct Link':'Adsterra কোড (<script>...)'}" oninput="tmpAds[${i}].code=this.value">${esc(a.code||'')}</textarea>
- ${a.type=='direct'?'<p class="hint" style="margin:4px 0">🔓 এই লিংকটা আনলক টাস্কে ব্যবহার হবে (সাইটে আলাদা করে দেখাবে না)</p>':`<select onchange="tmpAds[${i}].pos=this.value">${POS.map(p=>`<option value="${p[0]}" ${a.pos==p[0]?'selected':''}>${p[1]}</option>`).join('')}</select>`}
+ ${a.type=='direct'?'<p class="hint" style="margin:4px 0">🔓 এই লিংকটা আনলক টাস্কে ব্যবহার হবে (সাইটে আলাদা করে দেখাবে না)</p>':`<select onchange="tmpAds[${i}].pos=this.value">${POS.map(p=>`<option value="${p[0]}" ${a.pos==p[0]?'selected':''}>${p[1]}</option>`).join('')}</select><select onchange="tmpAds[${i}].size=this.value">${SIZES.map(z=>`<option value="${z[0]}" ${(a.size||'100')==z[0]?'selected':''}>${z[1]}</option>`).join('')}</select>`}
  <button class="abtn red sm" style="margin-top:6px" onclick="delAdRow(${i})">✕ এই ঘর মুছুন</button></div>`).join('');
 }
 function adType(i,v){ tmpAds[i].type=v; if(v=='popunder'||v=='social') tmpAds[i].pos='global'; else if(tmpAds[i].pos=='global') tmpAds[i].pos='bottom'; renderAdRows(); }
 function addAdRow(t){ tmpAds.push(t=='direct'?{type:'direct',label:'Direct Link '+(tmpAds.filter(a=>a.type=='direct').length+1),pos:'top',code:'',on:true}:{type:'banner',label:'নতুন Ad',pos:'bottom',code:'',on:true}); renderAdRows(); }
 function delAdRow(i){ tmpAds.splice(i,1); renderAdRows(); }
-function saveAds(){ S.ads={on:$('adOn').checked,items:tmpAds.map(a=>({...a,code:(a.code||'').trim()}))}; renderTaskInfo(); persist('✅ Ads সেভ হয়েছে — সাইট রিফ্রেশ করলে চালু হবে'); }
-function saveSettings(){ S.settings.siteName=$('siteName').value||'SUN9'; S.settings.cats=($('secName').value||'Movie,Natok'); S.settings.visitHours=Math.max(1,+$('visitHrs').value||5); S.settings.viralMode=$('viralMode').checked; S.settings.heroCount=Math.max(1,+$('heroCount').value||5); S.settings.heroSec=Math.max(1,+$('heroSec').value||3); heroSig=''; persist('✅ Settings সেভ হয়েছে'); }
+function saveAds(){ S.ads={on:$('adOn').checked,migNative:true,wsec:Math.max(1,+$('adW').value||10),asec:Math.max(1,+$('adA').value||5),show:Math.max(1,+$('adShow').value||5),hide:Math.max(1,+$('adHide').value||5),items:tmpAds.map(a=>({...a,code:(a.code||'').trim()}))}; renderTaskInfo(); persist('✅ Ads সেভ হয়েছে — সাইট রিফ্রেশ করলে চালু হবে'); }
+function saveSettings(){ S.settings.siteName=$('siteName').value||'SUN9'; S.settings.cats=($('secName').value||'Movie,Natok'); S.settings.visitHours=Math.max(1,+$('visitHrs').value||5); S.settings.newCount=Math.max(1,+$('newCount').value||5); S.settings.slotAfter=Math.max(0,+$('slotAfter').value||0); S.settings.welcome=$('welcomeTxt').value.trim(); S.settings.viralMode=$('viralMode').checked; S.settings.heroCount=Math.max(1,+$('heroCount').value||5); S.settings.heroSec=Math.max(1,+$('heroSec').value||3); heroSig=''; persist('✅ Settings সেভ হয়েছে'); }
 function resetData(){ if(confirm('সব মুভি মুছে যাবে। নিশ্চিত?')){ S.movies.forEach(m=>{ if(CLOUD) fbPutStr('thumbs/'+m.id,null).catch(()=>{}); }); S.movies=[]; heroSig=''; renderAdmin(); persist('🗑 সব মুভি মুছে গেছে'); } }
 
 /* ============ SAVE / SYNC ============ */
@@ -849,7 +898,7 @@ window.addEventListener('resize',setHH);
 (async function(){
  const c=jget('sun9_state',null); if(c) S=norm(c);
  { const n=+S.settings.theme||1; const v=localStorage.getItem('sun9_timg_'+n); if(v) IMG[n]=v; }
- syncDevBtn(); render(); setHH(); loadThumbs();
+ syncDevBtn(); makeSlot(); render(); setHH(); loadThumbs();
  await loadCloud(); await loadImgs(false); render(); runAds(); countVisit(); adView(); loadThumbs();
  route();
 })();
