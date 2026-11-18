@@ -115,6 +115,68 @@ footer{padding:22px;text-align:center;color:var(--mut);font-size:13px}
 .t6 .card .p b{font-size:17px}
 .t6 .task,.t6 .box{box-shadow:0 2px 10px #10182814}
 
+/* ----- THEME 7: Sunset Aurora (চলন্ত গ্রেডিয়েন্ট) ----- */
+#site.t7{--bg:#1a0b1f;--bg2:#ffffff10;--card:#ffffff14;--bd:#ffffff2a;--ac:#ff5e7e;--ac2:#ffb347;--onac:#fff;--rad:22px;--mut:#f0cfdb;
+ background:linear-gradient(120deg,#2b0a3d,#7a1f5c,#d94a3a,#2b0a3d);background-size:300% 300%;animation:grad 16s ease infinite}
+.t7 .btn,.t7 .badge{background:linear-gradient(90deg,var(--ac),var(--ac2));border-radius:999px}
+.t7 header{background:#0003}
+.t7 .card,.t7 .box{backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.t7 .sec::before{background:linear-gradient(var(--ac),var(--ac2))}
+
+/* ----- THEME 8: Emerald Night ----- */
+#site.t8{--bg:#04120d;--bg2:#08261b;--card:#0a1f17;--bd:#14412f;--ac:#10d98c;--ac2:#7cffcb;--onac:#02150d;--rad:20px;--mut:#8fc9b3;
+ background:radial-gradient(circle at 80% 0,#10d98c22,transparent 45%),radial-gradient(circle at 0 60%,#0ea5e922,transparent 40%),#04120d}
+.t8 .card{box-shadow:0 0 0 1px #10d98c18,0 10px 30px #0008}
+.t8 .card:hover{box-shadow:0 0 28px #10d98c66}
+.t8 .logo{text-shadow:0 0 18px #10d98c88}
+.t8 .thumb img{height:250px}
+.t8 .pill{border-radius:12px}
+
+/* ----- THEME 9: Pop Brutal (মোটা বর্ডার, কার্টুন স্টাইল) ----- */
+#site.t9{--bg:#fff3c4;--bg2:#fff;--card:#fff;--bd:#111;--tx:#111;--mut:#444;--ac:#ff3d71;--ac2:#ffd400;--onac:#fff;--rad:8px;--font:"Trebuchet MS",system-ui,"Noto Sans Bengali",sans-serif}
+.t9 header{background:#ffd400;border-bottom:3px solid #111}
+.t9 .logo span{color:#111}
+.t9 header input{border:3px solid #111;border-radius:10px}
+.t9 .card,.t9 .hero,.t9 .box,.t9 .task{border:3px solid #111;box-shadow:6px 6px 0 #111}
+.t9 .card:hover{transform:translate(-3px,-3px);box-shadow:9px 9px 0 #111;border-color:#111}
+.t9 .btn{border:3px solid #111;box-shadow:4px 4px 0 #111;font-weight:900}.t9 .btn:active{transform:translate(3px,3px);box-shadow:none}
+.t9 .pill{border:2px solid #111}.t9 .pill.active{background:#ff3d71;border-color:#111}
+.t9 .sec{font-weight:900;text-transform:uppercase}.t9 .sec::before{background:#111}
+.t9 .badge{border:2px solid #111;background:#ffd400;color:#111}
+.t9 .thumb img{border-bottom:3px solid #111}
+
+/* ----- THEME 10: Ocean Deep (চওড়া সিনেমা কার্ড) ----- */
+#site.t10{--bg:#021a2b;--bg2:#052b42;--card:#ffffff0d;--bd:#22d3ee33;--ac:#22d3ee;--ac2:#3b82f6;--onac:#00202b;--rad:18px;--mut:#9cc7d9;
+ background:linear-gradient(180deg,#021a2b,#04415a 60%,#021a2b);background-size:100% 200%;animation:wave 12s ease-in-out infinite alternate}
+.t10 .grid{grid-template-columns:1fr}
+@media(min-width:700px){.t10 .grid{grid-template-columns:repeat(2,1fr)}}
+.t10 .thumb img{height:190px}
+.t10 .btn{background:linear-gradient(90deg,var(--ac),var(--ac2))}
+.t10 .card{backdrop-filter:blur(8px)}
+.t10 .logo{text-shadow:0 0 16px #22d3ee88}
+
+/* ----- সব থিমে: ছোট অ্যানিমেশন ----- */
+.thumb{overflow:hidden}.thumb img{transition:transform .5s}
+.card:hover .thumb img{transform:scale(1.07)}
+.card{animation:up .55s backwards}
+.hero img{animation:kb 20s ease-in-out infinite alternate}
+.hero .ov>*{animation:up .7s backwards}
+.btn{transition:transform .15s,box-shadow .2s}.btn:active{transform:scale(.96)}
+.modal.open .box{animation:pop .3s}
+.sec{display:flex;align-items:center;gap:10px}.sec::before{content:"";width:5px;height:1.1em;border-radius:3px;background:var(--ac)}
+.t5 .sec,.t3 .sec{justify-content:center}
+.watch::after{content:" →";display:inline-block;transition:transform .2s}.card:hover .watch::after{transform:translateX(4px)}
+@keyframes up{from{opacity:0;transform:translateY(18px)}}
+@keyframes pop{from{opacity:0;transform:scale(.92)}}
+@keyframes kb{to{transform:scale(1.12)}}
+@keyframes grad{50%{background-position:100% 50%}}
+@keyframes wave{to{background-position:0 100%}}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+
+/* ----- অ্যাডমিনের দেওয়া থিম-ছবি ----- */
+#site.t6,#site.t9{--ov:rgba(255,255,255,.84)}
+#site.hasimg{background-image:linear-gradient(var(--ov,rgba(0,0,0,.78)),var(--ov,rgba(0,0,0,.78))),var(--bgimg);background-size:cover;background-position:center;background-attachment:fixed;animation:none}
+
 /* ========== ADMIN ========== */
 #admin{display:none;min-height:100vh;background:#0b0d12;color:#e8eaf0;font-family:system-ui,-apple-system,"Noto Sans Bengali",Arial,sans-serif;padding-bottom:60px}
 #admin.open{display:block}
@@ -143,9 +205,10 @@ footer{padding:22px;text-align:center;color:var(--mut);font-size:13px}
 .mv .t small{color:#8b93a7}
 .themes{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
 @media(min-width:560px){.themes{grid-template-columns:repeat(3,1fr)}}
-.th{background:#12161f;border:2px solid #232838;border-radius:16px;padding:10px;text-align:left;color:#e8eaf0;position:relative;transition:.2s}
+.th{cursor:pointer;background:#12161f;border:2px solid #232838;border-radius:16px;padding:10px;text-align:left;color:#e8eaf0;position:relative;transition:.2s}
 .th .sw{height:64px;border-radius:10px;display:flex;align-items:flex-end;gap:5px;padding:7px;margin-bottom:8px}
 .th .sw i{display:block;height:14px;flex:1;border-radius:4px}
+.th .up{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}.th .up label{cursor:pointer}
 .th .no{position:absolute;top:6px;right:6px;background:#000a;color:#fff;font-weight:800;font-size:13px;border-radius:8px;padding:2px 9px}
 .th b{display:block;font-size:14px}.th small{color:#8b93a7;font-size:12px}
 .th.on{border-color:#ff6b00;background:#2a1500;box-shadow:0 0 22px #ff6b0044}
@@ -223,6 +286,15 @@ footer{padding:22px;text-align:center;color:var(--mut);font-size:13px}
  <div class="pane" id="p-themes">
   <h3>🎨 থিম ম্যানেজার</h3>
   <p class="hint">নম্বর ধরে থিম বাছুন — ক্লিক করলেই পুরো ওয়েবসাইটের ডিজাইন (রং, লেআউট, কার্ড, ফন্ট) সবার কাছে বদলে যাবে।</p>
+  <div class="acard">
+   <b>🖼 ছবি দিয়ে থিম বদলান</b>
+   <p class="hint">১) ছবি বাছুন  ২) কত নম্বর থিমে বসবে লিখুন  ৩) Save দিন। ঐ নম্বরের থিমের ব্যাকগ্রাউন্ড হয়ে যাবে।</p>
+   <input id="ptFile" type="file" accept="image/*" onchange="ptPrev(this)">
+   <img id="ptPrev" style="display:none;width:100%;max-height:160px;object-fit:cover;border-radius:12px;margin:6px 0" alt="">
+   <label>থিম নম্বর (1 থেকে 10)</label><input id="ptNum" type="number" min="1" max="10" placeholder="যেমন 3">
+   <div class="sw-row"><span>Save করেই এই থিম চালু করুন</span><label class="tg"><input type="checkbox" id="ptOn" checked><i></i></label></div>
+   <button class="abtn" onclick="ptSave()">💾 ছবি Save করুন</button>
+  </div>
   <div class="themes" id="themeList"></div>
  </div>
 
@@ -293,6 +365,10 @@ const THEMES=[
  {n:4,name:'Glass Premium',d:'গ্লাস ব্লার, গোলাকার',c:['#2a1060','#a78bfa','#38bdf8']},
  {n:5,name:'Golden Cinema',d:'পোস্টার স্টাইল, সোনালি',c:['#070605','#d4af37','#f3e2a0']},
  {n:6,name:'Clean Light',d:'সাদা ব্যাকগ্রাউন্ড, লিস্ট লেআউট',c:['#f3f5fa','#2563eb','#60a5fa']},
+ {n:7,name:'Sunset Aurora',d:'চলন্ত গ্রেডিয়েন্ট, গ্লাস কার্ড',c:['#7a1f5c','#ff5e7e','#ffb347']},
+ {n:8,name:'Emerald Night',d:'সবুজ গ্লো, বড় কার্ড',c:['#04120d','#10d98c','#7cffcb']},
+ {n:9,name:'Pop Brutal',d:'হলুদ, মোটা বর্ডার, কার্টুন স্টাইল',c:['#fff3c4','#ff3d71','#ffd400']},
+ {n:10,name:'Ocean Deep',d:'নীল সাগর, চওড়া সিনেমা কার্ড',c:['#021a2b','#22d3ee','#3b82f6']},
 ];
 const CATS=['All','Action','Natok','Horror','Sci-Fi','Comedy','Thriller','Viral'];
 const DEF={
@@ -315,7 +391,7 @@ const jget=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(e){re
 const jset=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
 const arr=x=>Array.isArray(x)?x.filter(Boolean):(x&&typeof x==='object'?Object.values(x).filter(Boolean):[]);
 
-let S=clone(DEF), curCat='All', editing=null, cur=null, timer=null, tmpTasks=[], adsDone=false;
+let IMG={}, S=clone(DEF), curCat='All', editing=null, cur=null, timer=null, tmpTasks=[], adsDone=false;
 
 function norm(d){
  const o=clone(DEF); d=d||{};
@@ -328,7 +404,11 @@ function norm(d){
 }
 
 /* ============ PUBLIC SITE ============ */
-function applyTheme(){ $('site').className='t'+(THEMES.some(t=>t.n==S.settings.theme)?S.settings.theme:1); }
+function applyTheme(){
+ const n=THEMES.some(t=>t.n==S.settings.theme)?+S.settings.theme:1, el=$('site');
+ el.className='t'+n;
+ if(IMG[n]){ el.style.setProperty('--bgimg','url("'+IMG[n]+'")'); el.classList.add('hasimg'); } else el.style.removeProperty('--bgimg');
+}
 function render(){
  applyTheme();
  const q=($('search').value||'').toLowerCase();
@@ -337,7 +417,7 @@ function render(){
  const h=S.movies[0];
  $('hero').style.display=h?'flex':'none';
  if(h) $('hero').innerHTML=`<img src="${esc(h.img)}" alt=""><div class="ov"><span class="badge">${S.settings.viralMode!==false?'🔥 Viral Natok - Trending':'⭐ Featured'}</span><h1>${esc(h.title)}</h1><p class="small" style="color:#ddd">${esc(h.desc)} • ⏱ ${esc(h.dur)}</p><br><button class="btn" onclick="openMovie(${h.id})">▶️ এখনই দেখুন</button></div>`;
- $('grid').innerHTML=list.map(m=>`<div class="card" onclick="openMovie(${m.id})"><div class="thumb"><span class="dur">⏱ ${esc(m.dur)}</span><img loading="lazy" src="${esc(m.img)}" alt="" onerror="this.onerror=null;this.src='https://picsum.photos/600/400?random=${m.id}'"></div><div class="p"><b>${esc(m.title)}</b><div class="small">${esc(m.cat)} • ${esc(m.dur)}</div><div class="watch">▶️ দেখুন</div></div></div>`).join('')||'<p style="padding:20px">কোনো মুভি পাওয়া যায়নি</p>';
+ $('grid').innerHTML=list.map((m,i)=>`<div class="card" style="animation-delay:${Math.min(i,10)*55}ms" onclick="openMovie(${m.id})"><div class="thumb"><span class="dur">⏱ ${esc(m.dur)}</span><img loading="lazy" src="${esc(m.img)}" alt="" onerror="this.onerror=null;this.src='https://picsum.photos/600/400?random=${m.id}'"></div><div class="p"><b>${esc(m.title)}</b><div class="small">${esc(m.cat)} • ${esc(m.dur)}</div><div class="watch">▶️ দেখুন</div></div></div>`).join('')||'<p style="padding:20px">কোনো মুভি পাওয়া যায়নি</p>';
  const nm=(S.settings.siteName||'SUN9');
  $('logoText').innerHTML=esc(nm.replace(/9$/,''))+(/9$/.test(nm)?'<span>9</span>':'');
  $('secTitle').textContent=S.settings.secTitle||'🔥 Trending Now';
@@ -437,10 +517,12 @@ async function doLogin(){
  }catch(e){ toast('❌ ভুল পাসওয়ার্ড',1); }
 }
 function logout(){ localStorage.removeItem('sun9_dev'); localStorage.removeItem('sun9_auth'); auth=null; syncDevBtn(); closeAdmin(); toast('Logout হয়েছে'); }
-function enterAdmin(){
+async function enterAdmin(){
  $('site').style.display='none'; $('devBtn').style.display='none'; $('admin').classList.add('open'); window.scrollTo(0,0);
  $('modeTag').textContent=CLOUD?'☁️ Online সেভ':'📱 শুধু এই ফোনে'; $('modeTag').className='mode'+(CLOUD?'':' local');
+ THEMES.forEach(t=>{ const v=localStorage.getItem('sun9_timg_'+t.n); if(v) IMG[t.n]=v; });
  renderAdmin(); showTab(jget('sun9_tab','movies'));
+ await loadImgs(true); renderThemes();
 }
 function closeAdmin(){ $('admin').classList.remove('open'); $('site').style.display=''; syncDevBtn(); render(); }
 
@@ -461,8 +543,33 @@ function renderAdmin(){
  $('siteName').value=S.settings.siteName||''; $('secName').value=S.settings.secTitle||''; $('viralMode').checked=S.settings.viralMode!==false;
 }
 function renderThemes(){
- $('themeList').innerHTML=THEMES.map(t=>`<button class="th ${S.settings.theme==t.n?'on':''}" onclick="setTheme(${t.n})"><span class="no">${t.n}</span><div class="sw" style="background:${t.c[0]}">${t.c.map(c=>`<i style="background:${c}"></i>`).join('')}</div><b>${t.name}</b><small>${t.d}</small></button>`).join('');
+ $('themeList').innerHTML=THEMES.map(t=>`<div class="th ${S.settings.theme==t.n?'on':''}" onclick="setTheme(${t.n})"><span class="no">${t.n}</span><div class="sw" id="sw${t.n}" style="background:${t.c[0]}">${t.c.map(c=>`<i style="background:${c}"></i>`).join('')}</div><b>${t.name}</b><small>${t.d}</small><div class="up"><label class="abtn g sm" onclick="event.stopPropagation()">🖼 ছবি দিন<input type="file" accept="image/*" hidden onchange="upTheme(${t.n},this)"></label>${IMG[t.n]?`<button class="abtn red sm" onclick="event.stopPropagation();delImg(${t.n})">✕ ছবি</button>`:''}</div></div>`).join('');
+ THEMES.forEach(t=>{ if(IMG[t.n]){ const e=$('sw'+t.n); e.style.background='center/cover url("'+IMG[t.n]+'")'; } });
 }
+function shrink(file){ return new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>{ let w=1280,q=.72,out; for(let i=0;i<5;i++){ const k=Math.min(1,w/im.width), c=document.createElement('canvas'); c.width=Math.round(im.width*k); c.height=Math.round(im.height*k); c.getContext('2d').drawImage(im,0,0,c.width,c.height); out=c.toDataURL('image/jpeg',q); if(out.length<380000) break; w*=.78; q-=.07; } res(out); }; im.onerror=rej; im.src=URL.createObjectURL(file); }); }
+async function saveImg(n,val){
+ try{ if(val) localStorage.setItem('sun9_timg_'+n,val); else localStorage.removeItem('sun9_timg_'+n); }catch(e){}
+ if(!CLOUD) return;
+ const tok=await fbToken(); const r=await fetch(`${DB()}/themeimg/${n}.json?auth=${tok}`,{method:val?'PUT':'DELETE',body:val?JSON.stringify(val):undefined}); if(!r.ok) throw new Error(r.status);
+}
+async function upTheme(n,inp){
+ const f=inp.files[0]; if(!f) return;
+ try{ toast('⏳ ছবি আপলোড হচ্ছে...'); const v=await shrink(f); IMG[n]=v; await saveImg(n,v); renderThemes(); render(); toast('✅ থিম '+n+' এর ছবি সেভ হয়েছে'+(CLOUD?' ☁️':'')); }
+ catch(e){ delete IMG[n]; renderThemes(); toast('❌ ছবি সেভ হয়নি (Rules-এ themeimg যোগ করেছেন?)',1); }
+}
+let ptData=null;
+async function ptPrev(inp){ const f=inp.files[0]; if(!f) return; ptData=await shrink(f); const i=$('ptPrev'); i.src=ptData; i.style.display='block'; }
+async function ptSave(){
+ const n=+$('ptNum').value;
+ if(!ptData) return toast('আগে ছবি বাছুন',1);
+ if(!THEMES.some(t=>t.n==n)) return toast('থিম নম্বর 1 থেকে '+THEMES.length+' এর মধ্যে দিন',1);
+ try{
+  IMG[n]=ptData; await saveImg(n,ptData);
+  if($('ptOn').checked){ S.settings.theme=n; await persist('✅ থিম '+n+' এ ছবি বসেছে ও চালু হয়েছে'); } else toast('✅ থিম '+n+' এ ছবি সেভ হয়েছে');
+  ptData=null; $('ptFile').value=''; $('ptNum').value=''; $('ptPrev').style.display='none'; renderThemes(); render();
+ }catch(e){ delete IMG[n]; toast('❌ সেভ হয়নি (Rules-এ themeimg আছে?)',1); }
+}
+async function delImg(n){ try{ delete IMG[n]; await saveImg(n,null); renderThemes(); render(); toast('ছবি মুছে ফেলা হয়েছে'); }catch(e){ toast('❌ মোছা যায়নি',1); } }
 function setTheme(n){ S.settings.theme=n; renderThemes(); persist('🎨 থিম '+n+' চালু হয়েছে'); }
 
 function renderTaskRows(){
@@ -542,13 +649,20 @@ async function loadStats(){
  }catch(e){ $('stList').textContent='লোড হয়নি — Rules চেক করুন বা আবার Login করুন'; }
 }
 
+async function loadImgs(all){
+ if(!CLOUD) return;
+ try{ if(all){ const j=(await (await fetch(DB()+'/themeimg.json')).json())||{}; THEMES.forEach(t=>{ if(j[t.n]) IMG[t.n]=j[t.n]; else delete IMG[t.n]; }); }
+  else{ const n=+S.settings.theme||1, v=await (await fetch(`${DB()}/themeimg/${n}.json`)).json(); if(typeof v==='string'){ IMG[n]=v; try{localStorage.setItem('sun9_timg_'+n,v)}catch(e){} } else { delete IMG[n]; try{localStorage.removeItem('sun9_timg_'+n)}catch(e){} } }
+ }catch(e){}
+}
 let tt;
 function toast(m,err){ const t=$('toast'); t.textContent=m; t.className='show'+(err?' err':''); clearTimeout(tt); tt=setTimeout(()=>t.className='',2600); }
 
 /* ============ START ============ */
 (async function(){
  const c=jget('sun9_state',null); if(c) S=norm(c);
+ { const n=+S.settings.theme||1; const v=localStorage.getItem('sun9_timg_'+n); if(v) IMG[n]=v; }
  syncDevBtn(); render();
- await loadCloud(); render(); runAds(); countVisit();
+ await loadCloud(); await loadImgs(false); render(); runAds(); countVisit();
 })();
 </script></body></html>
