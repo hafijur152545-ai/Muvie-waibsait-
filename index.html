@@ -273,14 +273,34 @@ footer .fb{font-size:20px;font-weight:900;color:var(--ac);margin-bottom:4px}
 #midHost{margin:14px 0;text-align:center;overflow:hidden}
 
 .feat .lucky{cursor:pointer;color:var(--onac);background:linear-gradient(90deg,var(--ac),var(--ac2));border-color:transparent}
-.rotslot{flex:0 0 150px;position:relative;border-radius:var(--rad);overflow:hidden;min-height:270px;border:1px solid var(--bd);background:var(--card)}
-@media(min-width:700px){.rotslot{flex-basis:190px;min-height:330px}}
-.rotslot .wl,.rotslot .adl{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:10px;transition:opacity .7s}
-.rotslot .wl{background:linear-gradient(160deg,var(--ac),var(--ac2));color:var(--onac);gap:6px;z-index:1}
-.rotslot .wl .wi{font-size:38px;animation:bob 2.2s ease-in-out infinite}.rotslot .wl b{font-size:18px}.rotslot .wl .ws{font-size:22px;font-weight:900;line-height:1.2}.rotslot .wl small{opacity:.9;font-size:12px}
-.rotslot .adl{opacity:0;pointer-events:none;background:var(--card);z-index:2}
-.rotslot.showad .adl{opacity:1;pointer-events:auto}.rotslot.showad .wl{opacity:0}
-@media(max-width:420px){.rowcards .card,.rotslot{flex-basis:138px}}
+/* ===== নতুন আপলোড: ঠিক ৩টা, এক সারিতে, কোনো ফাঁক নেই ===== */
+#site #newRow.three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;overflow:visible;padding:12px 14px 6px;scroll-snap-type:none}
+#site #newRow.three .card{flex:none;width:auto;min-width:0;display:block}
+#site #newRow.three .thumb{width:auto}
+#site #newRow.three .thumb img{width:100%;height:auto;aspect-ratio:2/3;object-fit:cover}
+#site #newRow.three .dur{font-size:10px;padding:3px 7px;right:5px;top:5px}
+#site #newRow.three .card .p{padding:8px 7px}
+#site #newRow.three .card .p b{font-size:12px;line-height:1.3;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+#site #newRow.three .small{font-size:10.5px;line-height:1.4;margin-top:2px}
+#site #newRow.three .watch{font-size:11px;margin-top:4px}
+@media(min-width:700px){#site #newRow.three{gap:14px}#site #newRow.three .card .p b{font-size:15px}}
+/* ===== মাঝের প্রাইম স্বাগতম ঘর (Movie ও Natok-এর মাঝে) — ১০ সেকেন্ড স্বাগতম, ৫ সেকেন্ড Ad ===== */
+.rotslot{position:relative;margin:16px 14px;border-radius:18px;overflow:hidden;background:linear-gradient(135deg,#07070b,#1b1030 55%,#07070b);isolation:isolate;box-shadow:0 10px 30px #0009,0 0 0 1px #d4af3755}
+.rotslot::before{content:"";position:absolute;inset:0;border-radius:18px;padding:1.5px;background:linear-gradient(120deg,#f3e2a0,#d4af37 30%,#7c3aed 65%,#f3e2a0);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;z-index:3;background-size:250% 100%;animation:goldmove 6s linear infinite}
+.rotslot .wl{position:relative;display:flex;align-items:center;gap:14px;padding:16px 18px;min-height:96px;transition:opacity .7s;z-index:1;overflow:hidden}
+.rotslot .wl::after{content:"";position:absolute;top:0;bottom:0;width:60px;left:-80px;background:linear-gradient(100deg,transparent,#ffffff22,transparent);transform:skewX(-20deg);animation:sheen 4.5s ease-in-out infinite}
+.rotslot .wl .wi{flex:none;width:58px;height:58px;border-radius:50%;display:grid;place-items:center;font-size:30px;background:radial-gradient(circle at 30% 25%,#3a2a66,#120a24);box-shadow:0 0 0 2px #d4af37aa,0 0 22px #d4af3744;animation:bob 2.6s ease-in-out infinite}
+.rotslot .wl .wt{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;text-align:left}
+.rotslot .wl b{font-size:13px;letter-spacing:.5px;color:#f3e2a0;font-weight:700}
+.rotslot .wl .ws{font-size:25px;font-weight:900;line-height:1.2;background:linear-gradient(90deg,#fff,#f3e2a0 45%,#d4af37);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.rotslot .wl small{color:#c9bfe6;font-size:11.5px;opacity:.95}
+.rotslot .adl{position:absolute;left:0;right:0;top:0;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:8px;opacity:0;pointer-events:none;transition:opacity .7s;z-index:2;background:#07070b}
+.rotslot.showad .adl{position:relative;opacity:1;pointer-events:auto}
+.rotslot.showad .wl{position:absolute;left:0;right:0;top:0;opacity:0;pointer-events:none}
+.rotslot .adin{max-width:100%;overflow:hidden}
+@keyframes sheen{0%,55%{left:-80px}100%{left:110%}}
+@keyframes goldmove{to{background-position:250% 0}}
+@media(max-width:420px){.rotslot .wl{padding:14px;gap:12px}.rotslot .wl .wi{width:50px;height:50px;font-size:26px}.rotslot .wl .ws{font-size:21px}}
 @keyframes bob{50%{transform:translateY(-6px) scale(1.08)}}
 
 /* ========== ADMIN ========== */
@@ -428,7 +448,7 @@ footer .fb{font-size:20px;font-weight:900;color:var(--ac);margin-bottom:4px}
   <h3>💰 Adsterra Ads</h3>
   <p class="hint">Adsterra-র প্রতিটা ধরনের জন্য আলাদা ঘর। কোড (বা Direct Link) বসান, চালু/বন্ধ করুন, আর কোথায় দেখাবে বেছে নিন। দর্শক সাইটে ঢুকলেই চলবে (মুভিতে ক্লিক করলে নয়)।</p>
   <div class="acard"><div class="sw-row"><span><b>সব Ads একসাথে চালু / বন্ধ</b></span><label class="tg"><input type="checkbox" id="adOn"><i></i></label></div></div>
-  <div class="acard"><b>🆕 স্বাগতম ↔ Ad ঘূর্ণন (নতুন আপলোড সারির ভেতরে)</b><p class="hint">"নতুন আপলোড সারির ভেতরে" জায়গা দেওয়া Ad এখানে আসবে। প্রথমে স্বাগতম দেখায়, এই সেকেন্ড পর Ad আসে, কিছুক্ষণ থেকে আবার স্বাগতম।</p><div class="row2"><div><label>স্বাগতম দেখাবে (সেকেন্ড)</label><input id="adW" type="number" min="1" max="120"></div><div><label>Ad দেখাবে (সেকেন্ড)</label><input id="adA" type="number" min="1" max="120"></div></div></div>
+  <div class="acard"><b>🎯 স্বাগতম ↔ Ad ঘূর্ণন (Movie ও Natok-এর মাঝে)</b><p class="hint">"Movie ও Natok-এর মাঝে" জায়গা দেওয়া Ad এখানে আসবে। প্রথমে স্বাগতম দেখায়, এই সেকেন্ড পর Ad আসে, কিছুক্ষণ থেকে আবার স্বাগতম।</p><div class="row2"><div><label>স্বাগতম দেখাবে (সেকেন্ড)</label><input id="adW" type="number" min="1" max="120"></div><div><label>Ad দেখাবে (সেকেন্ড)</label><input id="adA" type="number" min="1" max="120"></div></div></div>
   <div class="acard"><b>📌 Sticky Banner সময়</b><p class="hint">যে Banner-এর জায়গা "Sticky" দেবেন সেটা স্ক্রিনের নিচে ভাসবে, এই সেকেন্ড দেখিয়ে লুকাবে, আবার রিফ্রেশ হয়ে ফিরবে।</p><div class="row2"><div><label>কত সেকেন্ড দেখাবে</label><input id="adShow" type="number" min="1" max="120"></div><div><label>কত সেকেন্ড লুকিয়ে থাকবে</label><input id="adHide" type="number" min="1" max="120"></div></div></div>
   <div id="adRows"></div>
   <button class="abtn g sm" onclick="addAdRow()">+ নতুন Ad ঘর</button> <button class="abtn sm" onclick="addAdRow('direct')">+ Direct Link (টাস্কের জন্য)</button>
@@ -451,7 +471,7 @@ footer .fb{font-size:20px;font-weight:900;color:var(--ac);margin-bottom:4px}
   <div class="acard">
    <label>ওয়েবসাইটের নাম / লোগো</label><input id="siteName">
    <label>ক্যাটাগরি লিস্ট (কমা দিয়ে লিখুন, যেমন: Movie,Natok)</label><input id="secName">
-   <div class="row2"><div><label>নতুন আপলোড সারিতে কয়টা দেখাবে</label><input id="newCount" type="number" min="1" max="20"></div><div><label>কয়টা মুভির পর স্বাগতম/Ad ঘর বসবে</label><input id="slotAfter" type="number" min="0" max="20"></div></div>
+   <p class="hint">🆕 নতুন আপলোড সারিতে সবসময় শেষ ৩টা মুভি/নাটক এক লাইনে দেখাবে।</p><div style="display:none"><input id="newCount" type="number"><input id="slotAfter" type="number"></div>
    <label>স্বাগতম বার্তা (ফাঁকা রাখলে "স্বাগতম")</label><input id="welcomeTxt" placeholder="যেমন: স্বাগতম! নতুন নাটক দেখুন">
    <label>ইউনিক ভিজিট গণনা: একই ডিভাইস কত ঘণ্টা পর আবার নতুন ভিজিট হবে</label><input id="visitHrs" type="number" min="1" max="24">
    <div class="row2"><div><label>ওপরের স্লাইডারে কয়টা নতুন মুভি</label><input id="heroCount" type="number" min="1" max="10"></div><div><label>কত সেকেন্ড পর পর বদলাবে</label><input id="heroSec" type="number" min="1" max="30"></div></div>
@@ -489,7 +509,7 @@ const THEMES=[
 ];
 const CATS=['All','Action','Natok','Horror','Sci-Fi','Comedy','Thriller','Viral'];
 const DEF={
- settings:{siteName:'SUN9',theme:1,viralMode:true,cats:'Movie,Natok',visitHours:5,newCount:5,slotAfter:2,welcome:'',heroSec:3,heroCount:5},
+ settings:{siteName:'SUN9',theme:1,viralMode:true,cats:'Movie,Natok',visitHours:5,newCount:3,slotAfter:0,welcome:'',heroSec:3,heroCount:5},
  ads:{on:true,show:5,hide:5,wsec:10,asec:5,items:[{type:'popunder',label:'Popunder',pos:'global',code:'',on:true},{type:'social',label:'Social Bar',pos:'global',code:'',on:true},{type:'banner',label:'Banner (ওপরে)',pos:'top',code:'',on:true},{type:'banner',label:'Banner (নিচে)',pos:'bottom',code:'',on:true},{type:'native',label:'Native Banner',pos:'bottom',code:'',on:true},{type:'direct',label:'Direct Link 1',pos:'top',code:'',on:true},{type:'direct',label:'Direct Link 2',pos:'top',code:'',on:true},{type:'direct',label:'Direct Link 3',pos:'top',code:'',on:true}]},
  unlock:{count:3,gap:10,hours:24,tasks:[{url:''},{url:''},{url:''}]},
  movies:[]};
@@ -512,7 +532,7 @@ function norm(d){
  const ad=d.ads||{}; o.ads.on=ad.on!==false; o.ads.show=+ad.show||5; o.ads.hide=+ad.hide||5; o.ads.wsec=+ad.wsec||10; o.ads.asec=+ad.asec||5; o.ads.migNative=!!ad.migNative;
  if(ad.items!==undefined) o.ads.items=arr(ad.items);
  else if(ad.pop||ad.b1||ad.b2) o.ads.items=[{type:'popunder',label:'Popunder / Social Bar',pos:'global',code:ad.pop||'',on:true},{type:'banner',label:'Banner (ওপরে)',pos:'top',code:ad.b1||'',on:true},{type:'banner',label:'Banner (নিচে)',pos:'bottom',code:ad.b2||'',on:true}];
- if(!o.ads.migNative){ o.ads.items.forEach(a=>{ if(a.type==='native'&&a.pos==='bottom') a.pos='newrow'; }); o.ads.migNative=true; } // Native আগের জায়গা থেকে নতুন-আপলোড সারিতে (একবারই)
+ o.ads.migNative=true; o.ads.items.forEach(a=>{ if(a.type!=='direct'&&(a.pos==='bottom'||a.pos==='newrow')) a.pos='middle'; }); // Native আগের জায়গা থেকে নতুন-আপলোড সারিতে (একবারই)
  const u=d.unlock||{}; o.unlock={...o.unlock,...u};
  // পুরনো টাস্ক-লিংক থাকলে সেগুলো Ads-এর Direct Link হয়ে যাবে
  const lt=arr(u.tasks).filter(t=>t.url&&t.url.trim());
@@ -547,9 +567,9 @@ function render(){
   $('hero').innerHTML=hs.map((h,i)=>`<div class="slide ${i==0?'on':''}"><img data-th="${h.id}" src="${esc(imgOf(h))}" alt=""><div class="ov"><span class="badge">${i==0?'🆕 লেটেস্ট':(S.settings.viralMode!==false?'🔥 Viral':'⭐ Featured')}</span><h1>${esc(h.title)}</h1><div class="meta"><span>${esc(catOf(h))}</span><span>⏱ ${esc(h.dur)}</span></div>${h.desc?`<p class="hd">${esc(h.desc)}</p>`:''}<button class="btn" onclick="openMovie(${h.id})">▶️ এখনই দেখুন</button></div></div>`).join('')+(hs.length>1?`<div class="dots">${hs.map((_,i)=>`<i class="${i==0?'on':''}" onclick="goSlide(${i})"></i>`).join('')}</div><i class="hp"></i>`:'');
   startSlider(); }
  const match=m=>(m.title||'').toLowerCase().includes(q)||(m.cat||'').toLowerCase().includes(q);
- const nl=MOV().slice(0,Math.max(1,+S.settings.newCount||5)), showNew=nl.length>=1&&curCat=='All'&&!q;
+ const nl=MOV().slice(0,3), showNew=nl.length>=1&&curCat=='All'&&!q;
  $('newWrap').style.display=showNew?'block':'none';
- if(showNew){ const k=Math.min(Math.max(0,+S.settings.slotAfter??2),nl.length); $('newRow').innerHTML=nl.slice(0,k).map(cardHTML).join('')+'<div id="newSlot"></div>'+nl.slice(k).map(cardHTML).join(''); updateWelcome(); placeSlot(); } else $('newRow').innerHTML='';
+ if(showNew){ $('newRow').classList.add('three'); $('newRow').innerHTML=nl.map(cardHTML).join(''); updateWelcome(); } else $('newRow').innerHTML='';
  $('feat').style.display=(curCat=='All'&&!q)?'flex':'none';
  let html='';
  if(q){ const r=S.movies.filter(match); html=secHTML('🔍 সার্চ ফলাফল',r.length,r.length?`<div class="grid">${r.map(cardHTML).join('')}</div>`:'<div class="empty">কিছু পাওয়া যায়নি</div>'); }
@@ -602,9 +622,11 @@ function injectHTML(el,html){
 let slotHost=null, slotAds=[], slotT;
 function greet(){ const h=new Date().getHours(); return h<5?'শুভ রাত্রি':h<12?'শুভ সকাল':h<15?'শুভ দুপুর':h<18?'শুভ বিকাল':h<20?'শুভ সন্ধ্যা':'শুভ রাত্রি'; }
 function makeSlot(){ slotHost=document.createElement('div'); slotHost.className='rotslot'; slotHost.innerHTML='<div class="wl"></div><div class="adl"></div>'; }
-function updateWelcome(){ if(!slotHost) return; const nm=S.settings.siteName||'SUN9', c=(S.settings.welcome||'').trim(); slotHost.querySelector('.wl').innerHTML=`<div class="wi">🎬</div><b>${esc(greet())}!</b><div class="ws">${esc(c||'স্বাগতম')}</div><small>${esc(nm)}-এর পক্ষ থেকে ❤️</small>`; }
-function placeSlot(){ const sl=$('newSlot'); if(sl&&slotHost) sl.replaceWith(slotHost); }
-function fitSlot(){ const adl=slotHost&&slotHost.querySelector('.adl'); if(!adl) return; const w=(slotHost.clientWidth||150)-6; adl.querySelectorAll('.adin').forEach(e=>{ e.style.zoom=''; const sw=e.scrollWidth; if(sw>w) e.style.zoom=(w/sw).toFixed(3); }); }
+function greetIco(){ const h=new Date().getHours(); return h<5?'🌙':h<12?'🌅':h<15?'☀️':h<18?'🌤️':h<20?'🌇':'🌙'; }
+function updateWelcome(){ if(!slotHost) return; const nm=S.settings.siteName||'SUN9', c=(S.settings.welcome||'').trim(); slotHost.querySelector('.wl').innerHTML=`<div class="wi">${greetIco()}</div><div class="wt"><b>${esc(greet())}!</b><div class="ws">${esc(c||'স্বাগতম')}</div><small>${esc(nm)}-এর পক্ষ থেকে ❤️</small></div>`; }
+setInterval(()=>{ try{ updateWelcome(); }catch(e){} },60000);
+function placeSlot(){ const sl=$('midSlot'); if(sl&&slotHost) sl.replaceWith(slotHost); }
+function fitSlot(){ const adl=slotHost&&slotHost.querySelector('.adl'); if(!adl) return; const w=(slotHost.clientWidth||300)-20; adl.querySelectorAll('.adin').forEach(e=>{ e.style.zoom=''; const sw=e.scrollWidth; if(sw>w) e.style.zoom=(w/sw).toFixed(3); }); }
 function startSlot(){
  clearTimeout(slotT); slotHost.classList.remove('showad'); if(!slotAds.length) return;
  const w=Math.max(1,+S.ads.wsec||10)*1000, a=Math.max(1,+S.ads.asec||5)*1000;
@@ -620,15 +642,14 @@ function runAds(){
  arr(S.ads.items).filter(a=>a.type!=='direct'&&a.on!==false&&a.code&&a.code.trim()).forEach(a=>{
   if(a.type==='popunder'){ popItems.push(a); return; } // Popunder থাম্বনেল-ক্লিকে চলবে না, আনলকের পর চলবে
   if(a.pos==='sticky'){ stickyItems.push(a); return; }
-  if(a.pos==='newrow'){ slotAds.push(a); const d=document.createElement('div'); d.className='adin'; slotHost.querySelector('.adl').appendChild(d); injectHTML(d,a.code); return; }
-  if(a.pos==='middle'){ if(!midHost){ midHost=document.createElement('div'); midHost.id='midHost'; } const d=adWrap(a); midHost.appendChild(d); injectHTML(d,a.code); placeMid(); return; }
+  if(a.pos==='newrow'||a.pos==='middle'||a.pos==='bottom'){ slotAds.push(a); const d=document.createElement('div'); d.className='adin'; slotHost.querySelector('.adl').appendChild(d); injectHTML(d,a.code); return; }
   const d=adWrap(a);
   (a.pos==='global'?document.body:(a.pos==='bottom'?$('banner2'):$('banner1'))).appendChild(d);
   injectHTML(d,a.code);
  });
  startSticky(); startSlot();
 }
-function placeMid(){ const sl=$('midSlot'); if(sl&&midHost) sl.replaceWith(midHost); }
+function placeMid(){ placeSlot(); }
 function startSticky(){
  if(!stickyItems.length) return; const box=$('stickyAd');
  const show=Math.max(1,+S.ads.show||5)*1000, hide=Math.max(1,+S.ads.hide||5)*1000;
@@ -816,7 +837,7 @@ function saveUnlock(){
  renderTaskInfo(); persist('✅ আনলক সেটিং সেভ হয়েছে');
 }
 const AD_TYPES=[['popunder','Popunder'],['social','Social Bar'],['banner','Banner'],['native','Native Banner'],['direct','Direct Link'],['other','অন্য কোড']];
-const POS=[['top','⬆️ ওপরে'],['middle','🔀 Movie ও Natok-এর মাঝে'],['newrow','🆕 নতুন আপলোড সারির ভেতরে (স্বাগতম-এর সাথে ঘুরে ঘুরে)'],['bottom','⬇️ নিচে'],['sticky','📌 Sticky (স্ক্রিনে ভাসমান, রিফ্রেশ হয়)'],['global','🌐 পুরো সাইটে (পেছনে চলে)']];
+const POS=[['top','⬆️ ওপরে'],['middle','🎯 Movie ও Natok-এর মাঝে (স্বাগতম-এর সাথে ঘুরে ঘুরে)'],['sticky','📌 Sticky (স্ক্রিনে ভাসমান, রিফ্রেশ হয়)'],['global','🌐 পুরো সাইটে (পেছনে চলে)']];
 const SIZES=[['100','আকার: স্বাভাবিক'],['80','আকার: ছোট (80%)'],['60','আকার: আরও ছোট (60%)']];
 function renderAdRows(){
  $('adRows').innerHTML=tmpAds.map((a,i)=>`<div class="acard"><div class="sw-row"><b>${i+1}. ${esc(a.label||'Ad')}</b><label class="tg"><input type="checkbox" ${a.on!==false?'checked':''} onchange="tmpAds[${i}].on=this.checked"><i></i></label></div>
