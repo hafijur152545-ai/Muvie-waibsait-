@@ -17,7 +17,12 @@ input,select,textarea{font:inherit;width:100%}
 .btn{background:var(--ac);color:var(--onac);padding:11px 18px;border-radius:calc(var(--rad) - 4px);font-weight:700}
 .btn.ghost{background:var(--card);color:var(--tx);border:1px solid var(--bd)}
 .hero{margin:14px;border-radius:var(--rad);overflow:hidden;position:relative;min-height:340px;background:var(--card);display:flex;align-items:flex-end}
+.hero .slide{position:absolute;inset:0;display:flex;align-items:flex-end;opacity:0;transition:opacity .9s;pointer-events:none}.hero .slide.on{opacity:1;pointer-events:auto}
 .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.dots{position:absolute;right:14px;top:14px;display:flex;gap:6px;z-index:3}.dots i{width:8px;height:8px;border-radius:50%;background:#fff7;cursor:pointer;transition:.3s}.dots i.on{background:var(--ac);width:22px;border-radius:6px}
+.adlink{display:block;padding:14px;border-radius:12px;background:linear-gradient(90deg,var(--ac),var(--ac2));color:var(--onac);font-weight:800;text-decoration:none}.adone{margin:8px 0}
+.lockhead{display:flex;gap:12px;align-items:center;margin-bottom:6px}.lockhead img{width:64px;height:84px;object-fit:cover;border-radius:10px;flex:none}
+.empty{padding:40px 20px;text-align:center;color:var(--mut);grid-column:1/-1}
 .hero .ov{position:relative;padding:20px;background:linear-gradient(transparent,rgba(0,0,0,.95));width:100%;color:#fff}
 .hero h1{font-size:30px;margin:8px 0}
 .badge{background:var(--ac);color:var(--onac);padding:4px 10px;border-radius:20px;font-size:12px;font-weight:800;display:inline-block}
@@ -274,8 +279,10 @@ footer{padding:22px;text-align:center;color:var(--mut);font-size:13px}
    <select id="fCat"><option>Action</option><option>Natok</option><option>Horror</option><option>Sci-Fi</option><option>Comedy</option><option>Thriller</option><option>Viral</option></select>
    <label>⏱ সময় (কত ঘণ্টা, কত মিনিট)</label>
    <div class="row2"><input id="fH" type="number" min="0" placeholder="ঘণ্টা (যেমন 1)"><input id="fM" type="number" min="0" max="59" placeholder="মিনিট (যেমন 45)"></div>
-   <input id="fImg" placeholder="Thumbnail Image Link (URL)">
-   <input id="fVideo" placeholder="Video Link (YouTube / Google Drive) — আনলকের পর দেখাবে">
+   <label>🖼 থাম্বনেল ছবি (ফোন থেকে আপলোড)</label>
+   <input id="fFile" type="file" accept="image/*" onchange="mvPrev(this)">
+   <img id="fPrev" style="display:none;width:100%;max-height:200px;object-fit:cover;border-radius:12px;margin:6px 0" alt="">
+   <input id="fVideo" placeholder="Video Link (YouTube / Facebook / Drive / .mp4) — আনলকের পর সাইটেই চলবে">
    <textarea id="fClick" rows="2" placeholder="আনলকের পর কী লেখা আসবে? যেমন: Free - এখনই দেখুন"></textarea>
    <textarea id="fDesc" rows="2" placeholder="ছোট Description"></textarea>
    <div style="display:flex;gap:8px;margin-top:8px"><button class="abtn" onclick="saveMovie()">💾 Save</button><button class="abtn g" onclick="hideEdit()">Cancel</button></div>
@@ -316,14 +323,11 @@ footer{padding:22px;text-align:center;color:var(--mut);font-size:13px}
 
  <div class="pane" id="p-ads">
   <h3>💰 Adsterra Ads</h3>
-  <p class="hint">কেউ ওয়েবসাইটে ঢুকলেই এই অ্যাডগুলো চলবে (মুভিতে ক্লিক করলে নয়, সেখানে শুধু আনলক টাস্ক আসে)।</p>
-  <div class="acard">
-   <div class="sw-row"><span><b>Ads চালু / বন্ধ</b></span><label class="tg"><input type="checkbox" id="adOn"><i></i></label></div>
-   <label>Popunder / Social Bar Script (পুরো সাইটে চলবে)</label><textarea id="adPop" rows="4" placeholder="&lt;script src=&quot;...&quot;&gt;&lt;/script&gt;"></textarea>
-   <label>Banner 1 কোড (ওপরে)</label><textarea id="adB1" rows="3"></textarea>
-   <label>Banner 2 কোড (নিচে)</label><textarea id="adB2" rows="3"></textarea>
-  </div>
-  <button class="abtn" onclick="saveAds()">💾 Ads Save করুন</button>
+  <p class="hint">Adsterra-র প্রতিটা ধরনের জন্য আলাদা ঘর। কোড (বা Direct Link) বসান, চালু/বন্ধ করুন, আর কোথায় দেখাবে বেছে নিন। দর্শক সাইটে ঢুকলেই চলবে (মুভিতে ক্লিক করলে নয়)।</p>
+  <div class="acard"><div class="sw-row"><span><b>সব Ads একসাথে চালু / বন্ধ</b></span><label class="tg"><input type="checkbox" id="adOn"><i></i></label></div></div>
+  <div id="adRows"></div>
+  <button class="abtn g sm" onclick="addAdRow()">+ নতুন Ad ঘর</button>
+  <div style="margin-top:14px"><button class="abtn" onclick="saveAds()">💾 Ads Save করুন</button></div>
  </div>
 
  <div class="pane" id="p-stats">
@@ -342,10 +346,11 @@ footer{padding:22px;text-align:center;color:var(--mut);font-size:13px}
   <div class="acard">
    <label>ওয়েবসাইটের নাম / লোগো</label><input id="siteName">
    <label>Trending অংশের শিরোনাম</label><input id="secName">
+   <div class="row2"><div><label>ওপরের স্লাইডারে কয়টা নতুন মুভি</label><input id="heroCount" type="number" min="1" max="10"></div><div><label>কত সেকেন্ড পর পর বদলাবে</label><input id="heroSec" type="number" min="1" max="30"></div></div>
    <div class="sw-row"><span><b>Viral Natok Mode</b></span><label class="tg"><input type="checkbox" id="viralMode"><i></i></label></div>
   </div>
   <button class="abtn" onclick="saveSettings()">💾 Save</button>
-  <div class="acard"><b>Demo Data</b><p class="hint">সব মুভি/সেটিং মুছে শুরুর ডেমোতে ফিরে যাবে।</p><button class="abtn red sm" onclick="resetData()">↺ Reset</button></div>
+  <div class="acard"><b>সব মুভি মুছুন</b><p class="hint">সব মুভি/নাটক মুছে সাইট খালি হবে (থিম আর Ads থাকবে)।</p><button class="abtn red sm" onclick="resetData()">🗑 সব মুভি মুছুন</button></div>
  </div>
 </div>
 <div id="toast"></div>
@@ -372,33 +377,30 @@ const THEMES=[
 ];
 const CATS=['All','Action','Natok','Horror','Sci-Fi','Comedy','Thriller','Viral'];
 const DEF={
- settings:{siteName:'SUN9',theme:1,viralMode:true,secTitle:'🔥 Trending Now'},
- ads:{on:true,pop:'',b1:'',b2:''},
+ settings:{siteName:'SUN9',theme:1,viralMode:true,secTitle:'🔥 Trending Now',heroSec:3,heroCount:5},
+ ads:{on:true,items:[{type:'popunder',label:'Popunder',pos:'global',code:'',on:true},{type:'social',label:'Social Bar',pos:'global',code:'',on:true},{type:'banner',label:'Banner (ওপরে)',pos:'top',code:'',on:true},{type:'banner',label:'Banner (নিচে)',pos:'bottom',code:'',on:true},{type:'native',label:'Native Banner',pos:'bottom',code:'',on:true}]},
  unlock:{count:3,gap:10,hours:24,tasks:[{url:''},{url:''},{url:''}]},
- movies:[
- {id:1,title:'ঢাকা নাইটস',cat:'Action',dur:'2h 15m',img:'https://images.unsplash.com/photo-1509347528160-9a9e33742cdb?w=600',click:'Premium - Login করে দেখুন',desc:'ঢাকার রাতের অ্যাকশন গল্প।',video:''},
- {id:2,title:'মনের মানুষ',cat:'Natok',dur:'45 min',img:'https://images.unsplash.com/photo-1516589178581-6cd7833ae3b2?w=600',click:'নাটকটা খুব তাড়াতাড়ি আসছে!',desc:'ভালোবাসার নতুন নাটক।',video:''},
- {id:3,title:'কালো ছায়া',cat:'Horror',dur:'1h 50m',img:'https://images.unsplash.com/photo-1509557965875-b88c97052f0e?w=600',click:'18+ - ভয় পেলে দেখবেন না!',desc:'ভয়ের হরর নাটক।',video:''},
- {id:4,title:'ঢাকা 2099',cat:'Sci-Fi',dur:'2h 30m',img:'https://images.unsplash.com/photo-1446776877081-d282a0f896e2?w=600',click:'Coming Soon - 20 Dec',desc:'ভবিষ্যতের ঢাকা।',video:''},
- {id:5,title:'বন্ধু আড্ডা',cat:'Comedy',dur:'1h 20m',img:'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600',click:'Free - এখনই দেখুন',desc:'বন্ধুদের মজার গল্প।',video:''},
- {id:6,title:'বৃষ্টির শহর',cat:'Thriller',dur:'1h 55m',img:'https://images.unsplash.com/photo-1428592953211-077101b2021b?w=600',click:'Premium - Subscribe করুন',desc:'বৃষ্টির রাতে রহস্য।',video:''}
- ]};
+ movies:[]};
 
 const $=id=>document.getElementById(id);
 const clone=o=>JSON.parse(JSON.stringify(o));
 const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const jget=(k,d)=>{try{return JSON.parse(localStorage.getItem(k))??d}catch(e){return d}};
 const jset=(k,v)=>{try{localStorage.setItem(k,JSON.stringify(v))}catch(e){}};
+const PLACE='data:image/svg+xml;utf8,'+encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="600" height="400"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2a2a3a"/><stop offset="1" stop-color="#14141c"/></linearGradient></defs><rect width="600" height="400" fill="url(#g)"/><text x="300" y="215" font-size="60" text-anchor="middle">🎬</text></svg>');
+const imgOf=m=>THUMB[m.id]||m.img||PLACE;
 const arr=x=>Array.isArray(x)?x.filter(Boolean):(x&&typeof x==='object'?Object.values(x).filter(Boolean):[]);
 
-let IMG={}, S=clone(DEF), curCat='All', editing=null, cur=null, timer=null, tmpTasks=[], adsDone=false;
+let IMG={}, THUMB={}, mvThumb=null, sIdx=0, sTimer, heroSig='', S=clone(DEF), curCat='All', editing=null, cur=null, timer=null, tmpTasks=[], tmpAds=[], adsDone=false;
 
 function norm(d){
  const o=clone(DEF); d=d||{};
  o.settings={...o.settings,...(d.settings||{})};
- o.ads={...o.ads,...(d.ads||{})};
+ const ad=d.ads||{}; o.ads.on=ad.on!==false;
+ if(ad.items!==undefined) o.ads.items=arr(ad.items);
+ else if(ad.pop||ad.b1||ad.b2) o.ads.items=[{type:'popunder',label:'Popunder / Social Bar',pos:'global',code:ad.pop||'',on:true},{type:'banner',label:'Banner (ওপরে)',pos:'top',code:ad.b1||'',on:true},{type:'banner',label:'Banner (নিচে)',pos:'bottom',code:ad.b2||'',on:true}];
  const u=d.unlock||{}; o.unlock={...o.unlock,...u}; o.unlock.tasks=u.tasks!==undefined?arr(u.tasks):o.unlock.tasks;
- if(d.movies!==undefined) o.movies=arr(d.movies);
+ if(d.movies!==undefined) o.movies=arr(d.movies).filter(m=>!(m.id>=1&&m.id<=6)); // পুরনো ডেমো মুভি বাদ
  o.settings.theme=+o.settings.theme||1;
  return o;
 }
@@ -414,10 +416,14 @@ function render(){
  const q=($('search').value||'').toLowerCase();
  const list=S.movies.filter(m=>(curCat=='All'||m.cat==curCat)&&((m.title||'').toLowerCase().includes(q)||(m.cat||'').toLowerCase().includes(q)));
  $('cats').innerHTML=CATS.map(c=>`<div class="pill ${c==curCat?'active':''}" onclick="setCat('${c}')">${c}</div>`).join('');
- const h=S.movies[0];
- $('hero').style.display=h?'flex':'none';
- if(h) $('hero').innerHTML=`<img src="${esc(h.img)}" alt=""><div class="ov"><span class="badge">${S.settings.viralMode!==false?'🔥 Viral Natok - Trending':'⭐ Featured'}</span><h1>${esc(h.title)}</h1><p class="small" style="color:#ddd">${esc(h.desc)} • ⏱ ${esc(h.dur)}</p><br><button class="btn" onclick="openMovie(${h.id})">▶️ এখনই দেখুন</button></div>`;
- $('grid').innerHTML=list.map((m,i)=>`<div class="card" style="animation-delay:${Math.min(i,10)*55}ms" onclick="openMovie(${m.id})"><div class="thumb"><span class="dur">⏱ ${esc(m.dur)}</span><img loading="lazy" src="${esc(m.img)}" alt="" onerror="this.onerror=null;this.src='https://picsum.photos/600/400?random=${m.id}'"></div><div class="p"><b>${esc(m.title)}</b><div class="small">${esc(m.cat)} • ${esc(m.dur)}</div><div class="watch">▶️ দেখুন</div></div></div>`).join('')||'<p style="padding:20px">কোনো মুভি পাওয়া যায়নি</p>';
+
+ const hs=S.movies.slice(0,Math.max(1,+S.settings.heroCount||5));
+ $('hero').style.display=hs.length?'flex':'none';
+ const sig=hs.map(h=>h.id+'|'+h.title+'|'+h.dur).join()+S.settings.viralMode+S.settings.heroSec;
+ if(sig!==heroSig){ heroSig=sig; sIdx=0;
+  $('hero').innerHTML=hs.map((h,i)=>`<div class="slide ${i==0?'on':''}"><img data-th="${h.id}" src="${esc(imgOf(h))}" alt=""><div class="ov"><span class="badge">${i==0?'🆕 লেটেস্ট':(S.settings.viralMode!==false?'🔥 Viral Natok':'⭐ Featured')}</span><h1>${esc(h.title)}</h1><p class="small" style="color:#ddd">${esc(h.desc)} • ⏱ ${esc(h.dur)}</p><br><button class="btn" onclick="openMovie(${h.id})">▶️ এখনই দেখুন</button></div></div>`).join('')+(hs.length>1?`<div class="dots">${hs.map((_,i)=>`<i class="${i==0?'on':''}" onclick="goSlide(${i})"></i>`).join('')}</div>`:'');
+  startSlider(); }
+ $('grid').innerHTML=list.map((m,i)=>`<div class="card" style="animation-delay:${Math.min(i,10)*55}ms" onclick="openMovie(${m.id})"><div class="thumb"><span class="dur">⏱ ${esc(m.dur)}</span><img data-th="${m.id}" loading="lazy" src="${esc(imgOf(m))}" alt="" onerror="this.onerror=null;this.src=PLACE"></div><div class="p"><b>${esc(m.title)}</b><div class="small">${esc(m.cat)} • ${esc(m.dur)}</div><div class="watch">▶️ দেখুন</div></div></div>`).join('')||`<div class="empty">${S.movies.length?'কোনো মুভি পাওয়া যায়নি':'🎬 শীঘ্রই নতুন নাটক আসছে...'}</div>`;
  const nm=(S.settings.siteName||'SUN9');
  $('logoText').innerHTML=esc(nm.replace(/9$/,''))+(/9$/.test(nm)?'<span>9</span>':'');
  $('secTitle').textContent=S.settings.secTitle||'🔥 Trending Now';
@@ -425,6 +431,17 @@ function render(){
  document.title=nm+' - Movie Website';
 }
 function setCat(c){curCat=c;render();}
+function goSlide(i){ const sl=document.querySelectorAll('#hero .slide'); if(!sl.length) return; sIdx=i%sl.length; sl.forEach((e,k)=>e.classList.toggle('on',k==sIdx)); document.querySelectorAll('#hero .dots i').forEach((e,k)=>e.classList.toggle('on',k==sIdx)); startSlider(); }
+function startSlider(){ clearInterval(sTimer); if(document.querySelectorAll('#hero .slide').length>1) sTimer=setInterval(()=>goSlide(sIdx+1),Math.max(1,+S.settings.heroSec||3)*1000); }
+function paintOne(id){ document.querySelectorAll('img[data-th="'+id+'"]').forEach(i=>i.src=THUMB[id]); }
+async function loadThumbs(){
+ S.movies.forEach(m=>{ if(!THUMB[m.id]){ try{ const v=localStorage.getItem('sun9_th_'+m.id); if(v){ THUMB[m.id]=v; paintOne(m.id); } }catch(e){} } });
+ if(!CLOUD) return;
+ await Promise.all(S.movies.filter(m=>!THUMB[m.id]&&!m.img).map(async m=>{ try{ const v=await (await fetch(`${DB()}/thumbs/${m.id}.json`)).json(); if(typeof v==='string'){ THUMB[m.id]=v; try{localStorage.setItem('sun9_th_'+m.id,v)}catch(e){} paintOne(m.id); } }catch(e){} }));
+}
+async function fbPutStr(path,val){
+ const tok=await fbToken(); const r=await fetch(`${DB()}/${path}.json?auth=${tok}`,{method:val?'PUT':'DELETE',body:val?JSON.stringify(val):undefined}); if(!r.ok) throw new Error(r.status);
+}
 
 /* --- ads: দর্শক সাইটে ঢুকলে --- */
 function injectHTML(el,html){
@@ -436,13 +453,15 @@ function injectHTML(el,html){
 function runAds(){
  if(adsDone) return; adsDone=true;
  if(S.ads.on===false) return;
- if(S.ads.b1) injectHTML($('banner1'),S.ads.b1);
- if(S.ads.b2) injectHTML($('banner2'),S.ads.b2);
- if(S.ads.pop){const d=document.createElement('div');document.body.appendChild(d);injectHTML(d,S.ads.pop);}
+ arr(S.ads.items).filter(a=>a.on!==false&&a.code&&a.code.trim()).forEach(a=>{
+  const d=document.createElement('div'); d.className='adone';
+  (a.pos==='global'?document.body:(a.pos==='bottom'?$('banner2'):$('banner1'))).appendChild(d);
+  injectHTML(d,a.type==='direct'?`<a class="adlink" href="${esc(a.code.trim())}" target="_blank" rel="noopener">${esc(a.label||'🎁 বিশেষ অফার দেখুন')}</a>`:a.code);
+ });
 }
 
 /* --- আনলক টাস্ক --- */
-function tasks(){ return arr(S.unlock.tasks).filter(t=>t.url&&t.url.trim()).slice(0,Math.max(1,+S.unlock.count||1)); }
+function tasks(){ return arr(S.unlock.tasks).filter(t=>t.on!==false&&t.url&&t.url.trim()).slice(0,Math.max(1,+S.unlock.count||1)); }
 function isUnlocked(id){ const u=jget('sun9_unlocked',{}); return u[id]&&u[id]>Date.now(); }
 function markUnlocked(id){ const h=+S.unlock.hours||0; if(!h) return; const u=jget('sun9_unlocked',{}); u[id]=Date.now()+h*3600e3; jset('sun9_unlocked',u); }
 function prog(id){ const p=jget('sun9_prog',{}); return p[id]||{done:[],until:0}; }
@@ -456,9 +475,8 @@ function openMovie(id){
 function closeModal(){ $('modal').classList.remove('open'); clearInterval(timer); $('mBox').innerHTML=''; }
 function showLock(){
  const T=tasks();
- $('mBox').innerHTML=`<div class="lockico">🔒</div><h2 style="text-align:center;margin:6px 0">${esc(cur.title)}</h2>
- <p class="small" style="text-align:center">${esc(cur.cat)} • ⏱ ${esc(cur.dur)}</p>
- <p style="text-align:center;margin:12px 0;font-weight:700">আনলক করতে নিচের ${T.length} টি টাস্ক পূরণ করুন</p>
+ $('mBox').innerHTML=`<div class="lockhead"><img src="${esc(imgOf(cur))}" alt=""><div><h2>${esc(cur.title)}</h2><p class="small">${esc(cur.cat)} • ⏱ ${esc(cur.dur)}</p></div></div>
+ <p style="margin:12px 0 0;font-weight:800">🔒 Unlock This Video</p><p class="small">ভিডিও দেখতে নিচের ${T.length} টি টাস্ক পূরণ করুন</p>
  <div class="bar"><i id="pbar"></i></div><div class="small" id="pnum" style="text-align:center"></div>
  ${T.map((t,i)=>`<button class="task" id="tk${i}" onclick="doTask(${i})"><span class="n">${i+1}</span><span>${esc(t.label||('টাস্ক '+(i+1)))}</span><span class="st" id="tks${i}"></span></button>`).join('')}
  <p class="small" style="margin-top:6px">একটা টাস্কে ক্লিক করলে লিংক খুলবে। পরের টাস্ক ${+S.unlock.gap||0} সেকেন্ড পর খুলবে।</p>
@@ -478,7 +496,7 @@ function tick(){
   const b=$('tk'+i), s=$('tks'+i); if(!b) return;
   const d=p.done.includes(i);
   b.className='task'+(d?' done':(left>0?' wait':''));
-  s.textContent=d?'✅ সম্পন্ন':(left>0?'⏳ '+left+' সেকেন্ড':'▶ খুলুন');
+  s.textContent=d?'✅ সম্পন্ন':(left>0?'⏳ '+left+' সেকেন্ড':'VISIT →');
  });
  $('pbar').style.width=(p.done.length/T.length*100)+'%';
  $('pnum').textContent=all?(left>0?'🎉 আনলক হচ্ছে... '+left+' সেকেন্ড':'আনলক!'):(p.done.length+' / '+T.length+' সম্পন্ন');
@@ -488,12 +506,16 @@ function embed(u){
  u=(u||'').trim(); if(!u) return '';
  let m=u.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/); if(m) return `<iframe class="player" src="https://www.youtube.com/embed/${m[1]}" allowfullscreen></iframe>`;
  m=u.match(/drive\.google\.com\/file\/d\/([\w-]+)/); if(m) return `<iframe class="player" src="https://drive.google.com/file/d/${m[1]}/preview" allowfullscreen></iframe>`;
+ if(/\.(mp4|webm)(\?|$)/i.test(u)) return `<video class="player" src="${esc(u)}" controls playsinline></video>`;
+ if(/facebook\.com|fb\.watch/i.test(u)) return `<iframe class="player" src="https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(u)}&show_text=false" allowfullscreen allow="autoplay; encrypted-media"></iframe>`;
  return `<a class="btn" style="display:block;text-align:center;text-decoration:none;margin:10px 0" href="${esc(u)}" target="_blank" rel="noopener">▶️ এখনই দেখুন</a>`;
 }
 function showUnlocked(){
  $('mBox').innerHTML=`<h2>${esc(cur.title)}</h2><p class="small">${esc(cur.desc)} | ${esc(cur.cat)} | ${esc(cur.dur)}</p>${embed(cur.video)}<div class="clicktxt">${esc(cur.click||'এখনই দেখুন')}</div><button class="btn" onclick="closeModal()">বন্ধ করুন</button> <button class="btn ghost" onclick="shareMovie()">📤 Share</button>`;
 }
-function shareMovie(){ const t=cur.title+' 🔥 এই নাটকটা দেখো - '+location.href.split('#')[0]; if(navigator.clipboard) navigator.clipboard.writeText(t); toast('Link Copy হয়ে গেছে! Facebook/WhatsApp এ Share করুন'); }
+function movieLink(id){ return location.href.split('#')[0]+'#m='+id; }
+function copyLink(id){ const u=movieLink(id); if(navigator.clipboard) navigator.clipboard.writeText(u); toast('🔗 লিংক কপি হয়েছে — Facebook-এ দিন'); }
+function shareMovie(){ copyLink(cur.id); }
 
 /* ============ ADMIN ACCESS (শুধু আপনার ফোনে) ============ */
 let taps=0, tapT=0;
@@ -535,18 +557,19 @@ function showTab(t){
 
 /* ============ ADMIN: render ============ */
 function renderAdmin(){
- $('movieList').innerHTML=S.movies.map(m=>`<div class="acard mv"><img src="${esc(m.img)}" alt=""><div class="t"><b>${esc(m.title)}</b><small>${esc(m.cat)} • ⏱ ${esc(m.dur)}</small></div><button class="abtn sm" onclick="editMovie(${m.id})">Edit</button><button class="abtn red sm" onclick="delMovie(${m.id})">✕</button></div>`).join('')||'<p class="hint">কোনো মুভি নেই</p>';
+ $('movieList').innerHTML=S.movies.map(m=>`<div class="acard mv"><img src="${esc(imgOf(m))}" alt=""><div class="t"><b>${esc(m.title)}</b><small>${esc(m.cat)} • ⏱ ${esc(m.dur)}</small></div><button class="abtn g sm" onclick="copyLink(${m.id})" title="লিংক কপি">🔗</button><button class="abtn sm" onclick="editMovie(${m.id})">Edit</button><button class="abtn red sm" onclick="delMovie(${m.id})">✕</button></div>`).join('')||'<p class="hint">কোনো মুভি নেই</p>';
  renderThemes();
  const u=S.unlock; $('uCount').value=u.count; $('uGap').value=u.gap; $('uHours').value=u.hours;
- tmpTasks=arr(u.tasks).map(t=>({label:t.label||'',url:t.url||''})); if(!tmpTasks.length) tmpTasks=[{label:'',url:''}]; renderTaskRows();
- $('adOn').checked=S.ads.on!==false; $('adPop').value=S.ads.pop||''; $('adB1').value=S.ads.b1||''; $('adB2').value=S.ads.b2||'';
+ tmpTasks=arr(u.tasks).map(t=>({label:t.label||'',url:t.url||'',on:t.on!==false})); if(!tmpTasks.length) tmpTasks=[{label:'',url:'',on:true}]; renderTaskRows();
+ $('adOn').checked=S.ads.on!==false; tmpAds=arr(S.ads.items).map(a=>({...a})); renderAdRows();
+ $('heroCount').value=S.settings.heroCount||5; $('heroSec').value=S.settings.heroSec||3;
  $('siteName').value=S.settings.siteName||''; $('secName').value=S.settings.secTitle||''; $('viralMode').checked=S.settings.viralMode!==false;
 }
 function renderThemes(){
  $('themeList').innerHTML=THEMES.map(t=>`<div class="th ${S.settings.theme==t.n?'on':''}" onclick="setTheme(${t.n})"><span class="no">${t.n}</span><div class="sw" id="sw${t.n}" style="background:${t.c[0]}">${t.c.map(c=>`<i style="background:${c}"></i>`).join('')}</div><b>${t.name}</b><small>${t.d}</small><div class="up"><label class="abtn g sm" onclick="event.stopPropagation()">🖼 ছবি দিন<input type="file" accept="image/*" hidden onchange="upTheme(${t.n},this)"></label>${IMG[t.n]?`<button class="abtn red sm" onclick="event.stopPropagation();delImg(${t.n})">✕ ছবি</button>`:''}</div></div>`).join('');
  THEMES.forEach(t=>{ if(IMG[t.n]){ const e=$('sw'+t.n); e.style.background='center/cover url("'+IMG[t.n]+'")'; } });
 }
-function shrink(file){ return new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>{ let w=1280,q=.72,out; for(let i=0;i<5;i++){ const k=Math.min(1,w/im.width), c=document.createElement('canvas'); c.width=Math.round(im.width*k); c.height=Math.round(im.height*k); c.getContext('2d').drawImage(im,0,0,c.width,c.height); out=c.toDataURL('image/jpeg',q); if(out.length<380000) break; w*=.78; q-=.07; } res(out); }; im.onerror=rej; im.src=URL.createObjectURL(file); }); }
+function shrink(file,mw){ return new Promise((res,rej)=>{ const im=new Image(); im.onload=()=>{ let w=mw||1280,q=.72,out; for(let i=0;i<5;i++){ const k=Math.min(1,w/im.width), c=document.createElement('canvas'); c.width=Math.round(im.width*k); c.height=Math.round(im.height*k); c.getContext('2d').drawImage(im,0,0,c.width,c.height); out=c.toDataURL('image/jpeg',q); if(out.length<(mw?90000:380000)) break; w*=.78; q-=.07; } res(out); }; im.onerror=rej; im.src=URL.createObjectURL(file); }); }
 async function saveImg(n,val){
  try{ if(val) localStorage.setItem('sun9_timg_'+n,val); else localStorage.removeItem('sun9_timg_'+n); }catch(e){}
  if(!CLOUD) return;
@@ -574,36 +597,56 @@ function setTheme(n){ S.settings.theme=n; renderThemes(); persist('🎨 থি�
 
 function renderTaskRows(){
  const c=Math.max(1,+$('uCount').value||1);
- $('taskRows').innerHTML=tmpTasks.map((t,i)=>`<div class="trow ${i>=c?'off':''}"><div class="no">${i+1}</div><div><input placeholder="টাস্কের নাম (যেমন: ভিডিও দেখুন)" value="${esc(t.label)}" oninput="tmpTasks[${i}].label=this.value"><input placeholder="https:// Direct Link" value="${esc(t.url)}" oninput="tmpTasks[${i}].url=this.value"></div><button class="x" onclick="delTaskRow(${i})">✕</button></div>`).join('');
+ $('taskRows').innerHTML=tmpTasks.map((t,i)=>`<div class="trow ${i>=c?'off':''}"><div class="no">${i+1}</div><div><input placeholder="টাস্কের নাম (যেমন: ভিডিও দেখুন)" value="${esc(t.label)}" oninput="tmpTasks[${i}].label=this.value"><input placeholder="https:// Direct Link" value="${esc(t.url)}" oninput="tmpTasks[${i}].url=this.value"><div class="sw-row" style="padding:2px 0"><span class="hint" style="margin:0">এই টাস্ক চালু</span><label class="tg"><input type="checkbox" ${t.on!==false?'checked':''} onchange="tmpTasks[${i}].on=this.checked"><i></i></label></div></div><button class="x" onclick="delTaskRow(${i})">✕</button></div>`).join('');
 }
-function addTaskRow(){ tmpTasks.push({label:'',url:''}); renderTaskRows(); }
-function delTaskRow(i){ tmpTasks.splice(i,1); if(!tmpTasks.length) tmpTasks=[{label:'',url:''}]; renderTaskRows(); }
+function addTaskRow(){ tmpTasks.push({label:'',url:'',on:true}); renderTaskRows(); }
+function delTaskRow(i){ tmpTasks.splice(i,1); if(!tmpTasks.length) tmpTasks=[{label:'',url:'',on:true}]; renderTaskRows(); }
 $('uCount').addEventListener('input',renderTaskRows);
 
 /* ============ ADMIN: actions ============ */
-function addMovie(){ editing=null; $('editTitle').textContent='নতুন মুভি / নাটক'; $('editBox').style.display='block'; ['fTitle','fH','fM','fImg','fVideo','fClick','fDesc'].forEach(i=>$(i).value=''); $('editBox').scrollIntoView({behavior:'smooth'}); }
+function addMovie(){ editing=null; mvThumb=null; $('editTitle').textContent='নতুন মুভি / নাটক'; $('editBox').style.display='block'; ['fTitle','fH','fM','fVideo','fClick','fDesc','fFile'].forEach(i=>$(i).value=''); $('fPrev').style.display='none'; $('editBox').scrollIntoView({behavior:'smooth'}); }
 function editMovie(id){
- const m=S.movies.find(x=>x.id==id); editing=id; $('editTitle').textContent='Edit: '+m.title; $('editBox').style.display='block';
- $('fTitle').value=m.title; $('fCat').value=m.cat; $('fImg').value=m.img; $('fVideo').value=m.video||''; $('fClick').value=m.click||''; $('fDesc').value=m.desc||'';
+ const m=S.movies.find(x=>x.id==id); editing=id; mvThumb=null; $('editTitle').textContent='Edit: '+m.title; $('editBox').style.display='block';
+ $('fTitle').value=m.title; $('fCat').value=m.cat; $('fVideo').value=m.video||''; $('fClick').value=m.click||''; $('fDesc').value=m.desc||''; $('fFile').value='';
+ $('fPrev').src=imgOf(m); $('fPrev').style.display='block';
  const h=(m.dur.match(/(\d+)\s*h/i)||[])[1]||'', mi=(m.dur.match(/(\d+)\s*(?:m|min)/i)||[])[1]||'';
  $('fH').value=h; $('fM').value=mi; $('editBox').scrollIntoView({behavior:'smooth'});
 }
 function hideEdit(){ $('editBox').style.display='none'; }
-function saveMovie(){
- const h=+$('fH').value||0, mi=+$('fM').value||0;
+async function mvPrev(inp){ const f=inp.files[0]; if(!f) return; mvThumb=await shrink(f,640); $('fPrev').src=mvThumb; $('fPrev').style.display='block'; }
+async function saveMovie(){
+ if(!editing&&!mvThumb) return toast('আগে থাম্বনেল ছবি বাছুন',1);
+ const id=editing||Date.now(), h=+$('fH').value||0, mi=+$('fM').value||0;
  const dur=h&&mi?`${h}h ${mi}m`:h?`${h}h`:`${mi||45} min`;
- const data={title:$('fTitle').value||'নতুন নাটক',cat:$('fCat').value,dur,img:$('fImg').value||'https://picsum.photos/600/400',video:$('fVideo').value,click:$('fClick').value||'এখনই দেখুন',desc:$('fDesc').value};
- if(editing){ const i=S.movies.findIndex(x=>x.id==editing); S.movies[i]={...S.movies[i],...data}; } else { data.id=Date.now(); S.movies.unshift(data); }
- hideEdit(); renderAdmin(); persist('✅ মুভি সেভ হয়েছে');
+ const data={title:$('fTitle').value||'নতুন নাটক',cat:$('fCat').value,dur,video:$('fVideo').value.trim(),click:$('fClick').value||'এখনই দেখুন',desc:$('fDesc').value};
+ if(mvThumb){
+  try{ THUMB[id]=mvThumb; try{localStorage.setItem('sun9_th_'+id,mvThumb)}catch(e){} if(CLOUD) await fbPutStr('thumbs/'+id,mvThumb); }
+  catch(e){ delete THUMB[id]; return toast('❌ ছবি সেভ হয়নি (Rules-এ thumbs যোগ করেছেন?)',1); }
+ }
+ if(editing){ const i=S.movies.findIndex(x=>x.id==editing); S.movies[i]={...S.movies[i],...data}; } else { data.id=id; data.img=''; S.movies.unshift(data); }
+ mvThumb=null; hideEdit(); heroSig=''; renderAdmin(); persist('✅ মুভি সেভ হয়েছে');
 }
-function delMovie(id){ if(confirm('মুছে ফেলবেন?')){ S.movies=S.movies.filter(m=>m.id!=id); renderAdmin(); persist('মুছে ফেলা হয়েছে'); } }
+async function delMovie(id){ if(confirm('মুছে ফেলবেন?')){ S.movies=S.movies.filter(m=>m.id!=id); delete THUMB[id]; try{localStorage.removeItem('sun9_th_'+id)}catch(e){} if(CLOUD) fbPutStr('thumbs/'+id,null).catch(()=>{}); heroSig=''; renderAdmin(); persist('মুছে ফেলা হয়েছে'); } }
 function saveUnlock(){
- S.unlock={count:Math.max(1,+$('uCount').value||1),gap:Math.max(0,+$('uGap').value||0),hours:Math.max(0,+$('uHours').value||0),tasks:tmpTasks.map(t=>({label:t.label.trim(),url:t.url.trim()}))};
+ S.unlock={count:Math.max(1,+$('uCount').value||1),gap:Math.max(0,+$('uGap').value||0),hours:Math.max(0,+$('uHours').value||0),tasks:tmpTasks.map(t=>({label:t.label.trim(),url:t.url.trim(),on:t.on!==false}))};
  const n=tasks().length; persist(n?`✅ সেভ — দর্শক ${n} টা টাস্ক দেখবে`:'⚠️ সেভ হয়েছে, কিন্তু কোনো লিংক নেই তাই লক চালু হবে না');
 }
-function saveAds(){ S.ads={on:$('adOn').checked,pop:$('adPop').value.trim(),b1:$('adB1').value.trim(),b2:$('adB2').value.trim()}; persist('✅ Ads সেভ হয়েছে'); }
-function saveSettings(){ S.settings.siteName=$('siteName').value||'SUN9'; S.settings.secTitle=$('secName').value||'🔥 Trending Now'; S.settings.viralMode=$('viralMode').checked; persist('✅ Settings সেভ হয়েছে'); }
-function resetData(){ if(confirm('সব ডেটা ডেমোতে ফিরবে। নিশ্চিত?')){ const th=S.settings.theme; S=clone(DEF); S.settings.theme=th; renderAdmin(); persist('↺ Reset হয়েছে'); } }
+const AD_TYPES=[['popunder','Popunder'],['social','Social Bar'],['banner','Banner'],['native','Native Banner'],['direct','Direct Link'],['other','অন্য কোড']];
+const POS=[['top','⬆️ ওপরে'],['bottom','⬇️ নিচে'],['global','🌐 পুরো সাইটে (পেছনে চলে)']];
+function renderAdRows(){
+ $('adRows').innerHTML=tmpAds.map((a,i)=>`<div class="acard"><div class="sw-row"><b>${i+1}. ${esc(a.label||'Ad')}</b><label class="tg"><input type="checkbox" ${a.on!==false?'checked':''} onchange="tmpAds[${i}].on=this.checked"><i></i></label></div>
+ <select onchange="adType(${i},this.value)">${AD_TYPES.map(t=>`<option value="${t[0]}" ${a.type==t[0]?'selected':''}>${t[1]}</option>`).join('')}</select>
+ <input placeholder="নাম (শুধু আপনার জন্য)" value="${esc(a.label||'')}" oninput="tmpAds[${i}].label=this.value">
+ <textarea rows="3" placeholder="${a.type=='direct'?'https:// Direct Link':'Adsterra কোড (<script>...)'}" oninput="tmpAds[${i}].code=this.value">${esc(a.code||'')}</textarea>
+ <select onchange="tmpAds[${i}].pos=this.value">${POS.map(p=>`<option value="${p[0]}" ${a.pos==p[0]?'selected':''}>${p[1]}</option>`).join('')}</select>
+ <button class="abtn red sm" style="margin-top:6px" onclick="delAdRow(${i})">✕ এই ঘর মুছুন</button></div>`).join('');
+}
+function adType(i,v){ tmpAds[i].type=v; if(v=='popunder'||v=='social') tmpAds[i].pos='global'; else if(tmpAds[i].pos=='global') tmpAds[i].pos='bottom'; renderAdRows(); }
+function addAdRow(){ tmpAds.push({type:'banner',label:'নতুন Ad',pos:'bottom',code:'',on:true}); renderAdRows(); }
+function delAdRow(i){ tmpAds.splice(i,1); renderAdRows(); }
+function saveAds(){ S.ads={on:$('adOn').checked,items:tmpAds.map(a=>({...a,code:(a.code||'').trim()}))}; persist('✅ Ads সেভ হয়েছে — সাইট রিফ্রেশ করলে চালু হবে'); }
+function saveSettings(){ S.settings.siteName=$('siteName').value||'SUN9'; S.settings.secTitle=$('secName').value||'🔥 Trending Now'; S.settings.viralMode=$('viralMode').checked; S.settings.heroCount=Math.max(1,+$('heroCount').value||5); S.settings.heroSec=Math.max(1,+$('heroSec').value||3); heroSig=''; persist('✅ Settings সেভ হয়েছে'); }
+function resetData(){ if(confirm('সব মুভি মুছে যাবে। নিশ্চিত?')){ S.movies.forEach(m=>{ if(CLOUD) fbPutStr('thumbs/'+m.id,null).catch(()=>{}); }); S.movies=[]; heroSig=''; renderAdmin(); persist('🗑 সব মুভি মুছে গেছে'); } }
 
 /* ============ SAVE / SYNC ============ */
 async function persist(msg){
@@ -662,7 +705,8 @@ function toast(m,err){ const t=$('toast'); t.textContent=m; t.className='show'+(
 (async function(){
  const c=jget('sun9_state',null); if(c) S=norm(c);
  { const n=+S.settings.theme||1; const v=localStorage.getItem('sun9_timg_'+n); if(v) IMG[n]=v; }
- syncDevBtn(); render();
- await loadCloud(); await loadImgs(false); render(); runAds(); countVisit();
+ syncDevBtn(); render(); loadThumbs();
+ await loadCloud(); await loadImgs(false); render(); runAds(); countVisit(); loadThumbs();
+ const mm=location.hash.match(/^#m=(\d+)/); if(mm&&S.movies.some(m=>m.id==mm[1])) openMovie(+mm[1]);
 })();
 </script></body></html>
